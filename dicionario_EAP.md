@@ -14,7 +14,7 @@
   - Responsável pelo ambiente
   - Usuários solicitantes
 
----
+
 
 ## 2. Modelagem do Sistema
 
@@ -38,7 +38,7 @@
   - Estado do item
   - Solicitação de manutenção
 
----
+
 
 ## 3. Desenvolvimento do Banco de Dados
 
@@ -60,7 +60,7 @@
 - **Inserção de Dados Iniciais**  
   Realizar o *seed* do banco com dados dos ambientes do IFSC Campus São José.
 
----
+
 
 ## 4. Desenvolvimento do Sistema (Interfaces)
 
@@ -83,7 +83,7 @@
   - Fornecedores
   - Conferentes
 
----
+
 
 ## 5. Funcionalidades do Sistema
 
@@ -102,7 +102,7 @@
   - Gestor de patrimônio
   - Responsável pelo ambiente
 
----
+
 
 ## 6. Consultas e Relatórios
 
@@ -117,7 +117,7 @@
   - Por responsável
   - Relatório geral de todos os patrimônios
 
----
+
 
 ## 7. Testes
 
@@ -129,7 +129,7 @@
   - Envio de e-mails
   - Precisão dos relatórios
 
----
+
 
 ## 8. Entrega do Projeto
 
