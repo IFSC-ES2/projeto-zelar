@@ -5,9 +5,10 @@
 - [**Visão do Produto e MVP**](docs/inception.md)
 - [**Definition of Done**](docs/dod.md)
 - [**Decisões Arquiteturais (ADRs)**](docs/adrs/)
+- [**Estimativas e Planejamento**](docs/estimativas.md)
+- [**Baseline do Projeto**](docs/baseline.md)
+- [**Métricas**](docs/metricas.md)
 - [**Acesso ao nosso Board e Backlog**](https://github.com/orgs/IFSC-ES2/projects/27)
-
----
 
 ## 1. Tema Definido
 **Título:** Zelar - Sistema de Gerenciamento de Patrimônio WEB.
