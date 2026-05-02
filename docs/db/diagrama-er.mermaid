@@ -1,0 +1,64 @@
+erDiagram
+    PATRIMONIO {
+        int id PK
+        varchar numero_patrimonio UK
+        text descricao
+        float valor
+        text observacoes
+        int tipo_material_id FK
+        int estado_item_id FK
+        int ambiente_id FK
+        int responsavel_id FK
+        int fornecedor_id FK
+    }
+
+    AMBIENTE {
+        int id PK
+        varchar nome
+        varchar bloco
+        varchar andar
+        int responsavel_id FK
+    }
+
+    RESPONSAVEL {
+        int id PK
+        varchar nome
+        varchar email
+        varchar cargo
+        varchar departamento
+        varchar telefone
+    }
+
+    CONFERENTE {
+        int id PK
+        varchar nome
+        varchar email
+        varchar cargo
+        varchar telefone
+    }
+
+    FORNECEDOR {
+        int id PK
+        varchar nome
+        varchar cnpj
+        varchar telefone
+        varchar email
+    }
+
+    TIPO_MATERIAL {
+        int id PK
+        varchar nome
+    }
+
+    ESTADO_ITEM {
+        int id PK
+        varchar nome
+        text descricao
+    }
+
+    PATRIMONIO }o--|| TIPO_MATERIAL : "possui"
+    PATRIMONIO }o--|| ESTADO_ITEM : "esta no"
+    PATRIMONIO }o--|| AMBIENTE : "localizado em"
+    PATRIMONIO }o--|| RESPONSAVEL : "pertence a"
+    PATRIMONIO }o--|| FORNECEDOR : "fornecido por"
+    AMBIENTE }o--|| RESPONSAVEL : " gerenciado por"
