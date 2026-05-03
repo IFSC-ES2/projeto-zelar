@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+
+    "strict": true,
+    "verbatimModuleSyntax": false,
+    "noImplicitOverride": false,
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+
+    "module": "CommonJS",
+    "outDir": "dist",
+    "noEmit": false,
+    "lib": ["es2022"]
+  }
+}
