@@ -17,5 +17,44 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - backend_modules:/app/node_modules
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: zelar
+      DB_USER: zelar
+      DB_PASSWORD: zelar
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./front:/app
+      - front_modules:/app/node_modules
+      - front_next:/app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      WATCHPACK_POLLING: "true"
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    command: sh -c "npm install -g pnpm && pnpm install --store-dir /root/.pnpm-store && pnpm dev"
+    depends_on:
+      - backend
+
 volumes:
   db_data:
+  backend_modules:
+  front_modules:
+  front_next:
