@@ -1,7 +1,7 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { sequelize } from '../database/connection';
 
-export class Responsavel extends Model<
+class Responsavel extends Model<
   InferAttributes<Responsavel>,
   InferCreationAttributes<Responsavel>
 > {
@@ -24,3 +24,5 @@ Responsavel.init(
   },
   { sequelize, tableName: 'responsavel', timestamps: false }
 );
+
+export default Responsavel;

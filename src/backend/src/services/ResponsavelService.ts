@@ -1,27 +1,39 @@
-import { CreationAttributes } from 'sequelize';
-import { Responsavel } from '../models/Responsavel';
-import { ResponsavelRepository } from '../repositories/ResponsavelRepository';
+import ResponsavelRepository from '../repositories/ResponsavelRepository';
+import { ResponsavelCreationAttributes, ResponsavelAttributes } from '../models/Responsavel';
+import Responsavel from '../models/Responsavel';
 
-export class ResponsavelService {
-  private repo = new ResponsavelRepository();
-
-  findAll() {
-    return this.repo.findAll();
+class ResponsavelService {
+  async createResponsavel(data: ResponsavelCreationAttributes): Promise<Responsavel> {
+    return await ResponsavelRepository.create(data);
   }
 
-  findById(id: number) {
-    return this.repo.findById(id);
+  async getAllResponsaveis(): Promise<Responsavel[]> {
+    return await ResponsavelRepository.findAll();
   }
 
-  create(data: CreationAttributes<Responsavel>) {
-    return this.repo.create(data);
+  async getResponsavelById(id: number): Promise<Responsavel> {
+    const responsavel = await ResponsavelRepository.findById(id);
+    if (!responsavel) {
+      throw new Error('Responsável não encontrado');
+    }
+    return responsavel;
   }
 
-  update(id: number, data: Partial<CreationAttributes<Responsavel>>) {
-    return this.repo.update(id, data);
+  async updateResponsavel(id: number, data: Partial<ResponsavelAttributes>): Promise<Responsavel> {
+    const updatedResponsavel = await ResponsavelRepository.update(id, data);
+    if (!updatedResponsavel) {
+      throw new Error('Responsável não encontrado para atualização');
+    }
+    return updatedResponsavel;
   }
 
-  delete(id: number) {
-    return this.repo.delete(id);
+  async deleteResponsavel(id: number): Promise<boolean> {
+    const deleted = await ResponsavelRepository.delete(id);
+    if (!deleted) {
+      throw new Error('Responsável não encontrado para exclusão');
+    }
+    return deleted;
   }
 }
+
+export default new ResponsavelService();

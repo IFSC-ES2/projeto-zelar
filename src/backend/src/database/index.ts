@@ -1,9 +1,9 @@
-import { Ambiente } from "../models/Ambiente";
-import { EstadoItem } from "../models/EstadoItem";
-import { Fornecedor } from "../models/Fornecedor";
-import { Patrimonio } from "../models/Patrimonio";
-import { Responsavel } from "../models/Responsavel";
-import { TipoMaterial } from "../models/TipoMaterial";
+import Ambiente from "../models/Ambiente";
+import EstadoItem from "../models/EstadoItem";
+import Fornecedor from "../models/Fornecedor";
+import Patrimonio from "../models/Patrimonio";
+import Responsavel from "../models/Responsavel";
+import TipoMaterial from "../models/TipoMaterial";
 
 Ambiente.belongsTo(Responsavel, { foreignKey: "responsavel_id" });
 Responsavel.hasMany(Ambiente, { foreignKey: "responsavel_id" });
