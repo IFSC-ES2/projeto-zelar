@@ -3,9 +3,10 @@ import { ResponsavelController } from "../controllers/ResponsavelController";
 
 const router = Router();
 
-// TODO: este arquivo é apenas um exemplo com GET.
-// Ainda falta as demais rotas (POST, PUT, DELETE)
 router.get("/", ResponsavelController.findAll);
 router.get("/:id", ResponsavelController.findById);
+router.post("/", ResponsavelController.create);
+router.put("/:id", ResponsavelController.update);
+router.delete("/:id", ResponsavelController.delete);
 
 export default router;
