@@ -55,8 +55,8 @@ services:
       - "3000:3000"
     environment:
       WATCHPACK_POLLING: "true"
-      NEXT_PUBLIC_API_URL: http://localhost:8000
-    command: sh -c "npm install -g pnpm && pnpm install --store-dir /root/.pnpm-store && pnpm dev"
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    command: sh -c "npm install -g pnpm@10.33.2 && pnpm install --store-dir /root/.pnpm-store && pnpm dev"
     depends_on:
       backend:
         condition: service_healthy

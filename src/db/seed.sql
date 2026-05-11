@@ -47,3 +47,11 @@ INSERT INTO patrimonio (id, numero_patrimonio, descricao, valor, observacoes, ti
     (8, '2024/008', 'Impressora HP LaserJet Pro M404dn', 2800.00, NULL, 1, 4, 4, 4, 1),
     (9, '2024/009', 'Armário de aço 2 portas', 950.00, 'Chave reserva no setor de patrimônio', 2, 3, 4, 4, 2),
     (10, '2024/010', 'Micro-ondas Electrolux ME41S', 650.00, 'Uso na copa da coordenação', 4, 1, 6, 2, 4);
+
+SELECT setval('tipo_material_id_seq', (SELECT MAX(id) FROM tipo_material));
+SELECT setval('estado_item_id_seq', (SELECT MAX(id) FROM estado_item));
+SELECT setval('fornecedor_id_seq', (SELECT MAX(id) FROM fornecedor));
+SELECT setval('responsavel_id_seq', (SELECT MAX(id) FROM responsavel));
+SELECT setval('conferente_id_seq', (SELECT MAX(id) FROM conferente));
+SELECT setval('ambiente_id_seq', (SELECT MAX(id) FROM ambiente));
+SELECT setval('patrimonio_id_seq', (SELECT MAX(id) FROM patrimonio));

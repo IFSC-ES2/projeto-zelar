@@ -45,7 +45,25 @@ export const ResponsavelController = {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const deleted = await service.delete(Number(req.params.id));
+      const id = Number(req.params.id);
+
+      const patrimonios = await service.findPatrimoniosVinculados(id);
+      if (patrimonios.length > 0) {
+        return res.status(409).json({
+          error: 'Responsável possui patrimônios vinculados e não pode ser excluído. Reatribua os patrimônios antes de excluir.',
+          patrimonios: patrimonios.map(p => ({ id: p.id, numero_patrimonio: p.numero_patrimonio, descricao: p.descricao })),
+        });
+      }
+
+      const ambientes = await service.findAmbientesVinculados(id);
+      if (ambientes.length > 0) {
+        return res.status(409).json({
+          error: 'Responsável possui ambientes vinculados e não pode ser excluído. Desvincule os ambientes antes de excluir.',
+          ambientes: ambientes.map(a => ({ id: a.id, nome: a.nome, bloco: a.bloco, andar: a.andar })),
+        });
+      }
+
+      const deleted = await service.delete(id);
       if (!deleted) return res.status(404).json({ error: 'Não encontrado' });
       res.status(204).send();
     } catch (err) {
