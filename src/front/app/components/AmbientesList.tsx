@@ -34,6 +34,14 @@ export default function AmbientesList() {
     if (!confirm('Confirmar exclusão do ambiente?')) return;
     try {
       const res = await fetch(`${API}/ambientes/${id}`, { method: 'DELETE' });
+      if (res.status === 409) {
+        const data = await res.json().catch(() => ({}));
+        const lista = (data.patrimonios as { numero_patrimonio: string; descricao: string }[] | undefined)
+          ?.map(p => `• ${p.numero_patrimonio} — ${p.descricao}`)
+          .join('\n') ?? '';
+        toast(`${data.error}\n\n${lista}`, 'error');
+        return;
+      }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         toast(data.error ?? 'Erro ao excluir ambiente', 'error');

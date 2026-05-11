@@ -32,9 +32,21 @@ export default function ResponsaveisList() {
   }, []);
 
   async function handleDelete(id: number) {
-    if (!confirm('Confirmar exclusão do responsável?')) return;
+    if (!confirm('Confirmar exclusão do responsável?\n\nAmbientes vinculados a ele perderão o responsável automaticamente.')) return;
     try {
       const res = await fetch(`${API}/responsaveis/${id}`, { method: 'DELETE' });
+      if (res.status === 409) {
+        const data = await res.json().catch(() => ({}));
+        const listaPatrimonios = (data.patrimonios as { numero_patrimonio: string; descricao: string }[] | undefined)
+          ?.map(p => `• ${p.numero_patrimonio} — ${p.descricao}`)
+          .join('\n') ?? '';
+        const listaAmbientes = (data.ambientes as { nome: string; bloco: string | null }[] | undefined)
+          ?.map(a => `• ${a.nome}${a.bloco ? ` (${a.bloco})` : ''}`)
+          .join('\n') ?? '';
+        const lista = listaPatrimonios || listaAmbientes;
+        toast(`${data.error}\n\n${lista}`, 'error');
+        return;
+      }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         toast(data.error ?? 'Erro ao excluir responsável', 'error');

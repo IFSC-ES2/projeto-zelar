@@ -1,4 +1,6 @@
 import { CreationAttributes } from 'sequelize';
+import { Ambiente } from '../models/Ambiente';
+import { Patrimonio } from '../models/Patrimonio';
 import { Responsavel } from '../models/Responsavel';
 import { ResponsavelRepository } from '../repositories/ResponsavelRepository';
 
@@ -19,6 +21,20 @@ export class ResponsavelService {
 
   update(id: number, data: Partial<CreationAttributes<Responsavel>>) {
     return this.repo.update(id, data);
+  }
+
+  async findPatrimoniosVinculados(id: number) {
+    return Patrimonio.findAll({
+      where: { responsavel_id: id },
+      attributes: ['id', 'numero_patrimonio', 'descricao'],
+    });
+  }
+
+  async findAmbientesVinculados(id: number) {
+    return Ambiente.findAll({
+      where: { responsavel_id: id },
+      attributes: ['id', 'nome', 'bloco', 'andar'],
+    });
   }
 
   delete(id: number) {

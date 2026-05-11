@@ -34,12 +34,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map(t => (
           <div
             key={t.id}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white text-sm min-w-64 max-w-sm ${
+            className={`flex items-start gap-3 px-4 py-3 rounded-lg shadow-lg text-white text-sm min-w-64 max-w-md ${
               t.type === 'error' ? 'bg-red-600' :
               t.type === 'success' ? 'bg-green-600' : 'bg-gray-800'
             }`}
           >
-            <span className="flex-1">{t.message}</span>
+            <span className="flex-1 whitespace-pre-line">{t.message}</span>
             <button onClick={() => remove(t.id)} className="opacity-70 hover:opacity-100">
               <X size={16} />
             </button>
