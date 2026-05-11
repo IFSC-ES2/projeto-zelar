@@ -124,7 +124,8 @@ describe('PUT /api/ambientes/:id', () => {
 });
 
 describe('DELETE /api/ambientes/:id', () => {
-  it('204 quando removido com sucesso', async () => {
+  it('204 quando removido sem vínculos', async () => {
+    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue([]);
     (MockedService.prototype.delete as jest.Mock).mockResolvedValue(true);
 
     const res = await request(app).delete('/api/ambientes/1');
@@ -134,6 +135,7 @@ describe('DELETE /api/ambientes/:id', () => {
   });
 
   it('404 quando id não existe', async () => {
+    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue([]);
     (MockedService.prototype.delete as jest.Mock).mockResolvedValue(false);
 
     const res = await request(app).delete('/api/ambientes/999');
@@ -142,8 +144,23 @@ describe('DELETE /api/ambientes/:id', () => {
     expect(res.body).toEqual({ error: 'Não encontrado' });
   });
 
+  it('409 quando possui patrimônios vinculados', async () => {
+    const patrimonios = [
+      { id: 1, numero_patrimonio: '2024/001', descricao: 'Computador Dell' },
+      { id: 2, numero_patrimonio: '2024/002', descricao: 'Monitor LG' },
+    ];
+    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue(patrimonios);
+
+    const res = await request(app).delete('/api/ambientes/1');
+
+    expect(res.status).toBe(409);
+    expect(res.body.error).toMatch(/patrimônios vinculados/);
+    expect(res.body.patrimonios).toHaveLength(2);
+    expect(res.body.patrimonios[0]).toMatchObject({ numero_patrimonio: '2024/001', descricao: 'Computador Dell' });
+  });
+
   it('500 quando service lança erro', async () => {
-    (MockedService.prototype.delete as jest.Mock).mockRejectedValue(new Error('DB error'));
+    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockRejectedValue(new Error('DB error'));
 
     const res = await request(app).delete('/api/ambientes/1');
 
