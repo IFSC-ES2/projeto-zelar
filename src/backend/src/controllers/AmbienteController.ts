@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { ForeignKeyConstraintError, UniqueConstraintError } from "sequelize";
 import { AmbienteService } from "../services/AmbienteService";
 
 const service = new AmbienteService();
@@ -26,6 +27,12 @@ export const AmbienteController = {
       const item = await service.create(req.body);
       res.status(201).json(item);
     } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return res.status(400).json({ error: 'Responsável informado não existe' });
+      }
+      if (err instanceof UniqueConstraintError) {
+        return res.status(409).json({ error: 'Já existe um ambiente com esses dados' });
+      }
       next(err);
     }
   },
@@ -36,6 +43,9 @@ export const AmbienteController = {
       if (!item) return res.status(404).json({ error: 'Não encontrado' });
       res.json(item);
     } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return res.status(400).json({ error: 'Responsável informado não existe' });
+      }
       next(err);
     }
   },
@@ -46,6 +56,9 @@ export const AmbienteController = {
       if (!deleted) return res.status(404).json({ error: 'Não encontrado' });
       res.status(204).send();
     } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return res.status(409).json({ error: 'Ambiente possui patrimônios vinculados e não pode ser excluído' });
+      }
       next(err);
     }
   },

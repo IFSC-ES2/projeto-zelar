@@ -2,11 +2,82 @@
 
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+type Responsavel = { id: number; nome: string };
 
 export default function AmbienteForm() {
   const { id } = useParams();
+  const router = useRouter();
   const isEdit = !!id;
+
+  const [nome, setNome] = useState('');
+  const [bloco, setBloco] = useState('');
+  const [andar, setAndar] = useState('');
+  const [responsavelId, setResponsavelId] = useState('');
+  const [responsaveis, setResponsaveis] = useState<Responsavel[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`${API}/responsaveis`)
+      .then(r => r.json())
+      .then(setResponsaveis)
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    fetch(`${API}/ambientes/${id}`)
+      .then(r => r.json())
+      .then(data => {
+        setNome(data.nome ?? '');
+        setBloco(data.bloco ?? '');
+        setAndar(data.andar ?? '');
+        setResponsavelId(data.responsavel_id ? String(data.responsavel_id) : '');
+      })
+      .catch(() => setErro('Erro ao carregar ambiente'));
+  }, [id, isEdit]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setErro(null);
+
+    if (!nome.trim()) {
+      setErro('Nome é obrigatório');
+      return;
+    }
+
+    setLoading(true);
+    const body = {
+      nome: nome.trim(),
+      bloco: bloco.trim() || null,
+      andar: andar.trim() || null,
+      responsavel_id: responsavelId ? Number(responsavelId) : null,
+    };
+
+    try {
+      const url = isEdit ? `${API}/ambientes/${id}` : `${API}/ambientes`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? 'Erro ao salvar');
+      }
+      router.push('/ambientes');
+    } catch (err: unknown) {
+      setErro(err instanceof Error ? err.message : 'Erro ao salvar');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -23,7 +94,8 @@ export default function AmbienteForm() {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <form className="space-y-6">
+        {erro && <p className="text-red-600 mb-4">{erro}</p>}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Informações Básicas</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -35,20 +107,22 @@ export default function AmbienteForm() {
                   type="text"
                   placeholder="Ex: Sala 201"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  value={nome}
+                  onChange={e => setNome(e.target.value)}
+                  required
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tipo de Ambiente *
+                  Bloco
                 </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                  <option value="">Selecione...</option>
-                  <option value="sala_reuniao">Sala de Reunião</option>
-                  <option value="escritorio">Escritório</option>
-                  <option value="laboratorio">Laboratório</option>
-                  <option value="deposito">Depósito</option>
-                  <option value="almoxarifado">Almoxarifado</option>
-                </select>
+                <input
+                  type="text"
+                  placeholder="Ex: Bloco A"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  value={bloco}
+                  onChange={e => setBloco(e.target.value)}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -58,16 +132,8 @@ export default function AmbienteForm() {
                   type="text"
                   placeholder="Ex: 2º Andar"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Capacidade (m²)
-                </label>
-                <input
-                  type="number"
-                  placeholder="Ex: 50"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  value={andar}
+                  onChange={e => setAndar(e.target.value)}
                 />
               </div>
             </div>
@@ -75,46 +141,31 @@ export default function AmbienteForm() {
 
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Responsável</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Responsável pelo Ambiente *
-                </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                  <option value="">Selecione...</option>
-                  <option value="joao">João Silva</option>
-                  <option value="maria">Maria Santos</option>
-                  <option value="pedro">Pedro Costa</option>
-                  <option value="ana">Ana Lima</option>
-                </select>
-                <p className="text-sm text-gray-500 mt-1">
-                  O responsável será vinculado a todos os patrimônios alocados neste ambiente
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Informações Adicionais</h2>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Observações
+                Responsável pelo Ambiente
               </label>
-              <textarea
-                rows={4}
-                placeholder="Informações adicionais sobre o ambiente..."
+              <select
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              ></textarea>
+                value={responsavelId}
+                onChange={e => setResponsavelId(e.target.value)}
+              >
+                <option value="">Selecione...</option>
+                {responsaveis.map(r => (
+                  <option key={r.id} value={r.id}>{r.nome}</option>
+                ))}
+              </select>
             </div>
           </div>
 
           <div className="flex gap-4 pt-4 border-t border-gray-200">
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              disabled={loading}
+              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               <Save size={20} />
-              {isEdit ? 'Salvar Alterações' : 'Cadastrar Ambiente'}
+              {loading ? 'Salvando...' : isEdit ? 'Salvar Alterações' : 'Cadastrar Ambiente'}
             </button>
             <Link
               href="/ambientes"

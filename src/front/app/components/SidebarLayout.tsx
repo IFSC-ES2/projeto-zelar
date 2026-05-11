@@ -17,8 +17,7 @@ const menuItems = [
 ];
 
 const implementedRoutes: string[] = [
-  // '/patrimonios',
-  // '/ambientes',
+  '/ambientes',
 ];
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {

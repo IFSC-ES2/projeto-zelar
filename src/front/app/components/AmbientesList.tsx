@@ -1,13 +1,56 @@
+'use client'
+
+import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
+import { useToast } from './Toast';
 import Link from 'next/link';
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+type Ambiente = {
+  id: number;
+  nome: string;
+  bloco: string | null;
+  andar: string | null;
+  responsavel_id: number | null;
+};
+
 export default function AmbientesList() {
-  const ambientes = [
-    { id: 1, nome: 'Sala 201', tipo: 'Sala de Reunião', andar: '2º Andar', responsavel: 'João Silva', patrimonios: 12 },
-    { id: 2, nome: 'Sala 305', tipo: 'Escritório', andar: '3º Andar', responsavel: 'Maria Santos', patrimonios: 8 },
-    { id: 3, nome: 'Laboratório 3', tipo: 'Laboratório', andar: '1º Andar', responsavel: 'Pedro Costa', patrimonios: 25 },
-    { id: 4, nome: 'Almoxarifado', tipo: 'Depósito', andar: 'Térreo', responsavel: 'Ana Lima', patrimonios: 45 },
-  ];
+  const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
+  const [busca, setBusca] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetch(`${API}/ambientes`)
+      .then(r => r.json())
+      .then(setAmbientes)
+      .catch(() => setErro('Erro ao carregar ambientes'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleDelete(id: number) {
+    if (!confirm('Confirmar exclusão do ambiente?')) return;
+    try {
+      const res = await fetch(`${API}/ambientes/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast(data.error ?? 'Erro ao excluir ambiente', 'error');
+        return;
+      }
+      setAmbientes(prev => prev.filter(a => a.id !== id));
+      toast('Ambiente excluído com sucesso', 'success');
+    } catch {
+      toast('Erro ao excluir ambiente', 'error');
+    }
+  }
+
+  const filtrados = ambientes.filter(a =>
+    a.nome.toLowerCase().includes(busca.toLowerCase()) ||
+    (a.bloco ?? '').toLowerCase().includes(busca.toLowerCase()) ||
+    (a.andar ?? '').toLowerCase().includes(busca.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -26,63 +69,67 @@ export default function AmbientesList() {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Buscar por nome, tipo, responsável..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-            Filtrar
-          </button>
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <input
+            type="text"
+            placeholder="Buscar por nome, bloco, andar..."
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
+            value={busca}
+            onChange={e => setBusca(e.target.value)}
+          />
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nome</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Tipo</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Andar</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Responsável</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Patrimônios</th>
-              <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">Ações</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {ambientes.map((ambiente) => (
-              <tr key={ambiente.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900 font-medium">{ambiente.nome}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{ambiente.tipo}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{ambiente.andar}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{ambiente.responsavel}</td>
-                <td className="px-6 py-4">
-                  <span className="inline-flex px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-600">
-                    {ambiente.patrimonios} itens
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex justify-end gap-2">
-                    <Link
-                      href={`/ambientes/editar/${ambiente.id}`}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                    >
-                      <Edit2 size={18} />
-                    </Link>
-                    <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
+      {erro && <p className="text-red-600">{erro}</p>}
+      {loading && <p className="text-gray-500">Carregando...</p>}
+
+      {!loading && !erro && (
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nome</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Bloco</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Andar</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filtrados.map((ambiente) => (
+                <tr key={ambiente.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900 font-medium">{ambiente.nome}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{ambiente.bloco ?? '-'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{ambiente.andar ?? '-'}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/ambientes/editar/${ambiente.id}`}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                      >
+                        <Edit2 size={18} />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(ambiente.id)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filtrados.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    Nenhum ambiente encontrado.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

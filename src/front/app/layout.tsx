@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SidebarLayout from "./components/SidebarLayout";
+import { ToastProvider } from "./components/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="h-full">
-        <SidebarLayout>{children}</SidebarLayout>
+        <ToastProvider>
+          <SidebarLayout>{children}</SidebarLayout>
+        </ToastProvider>
       </body>
     </html>
   );
