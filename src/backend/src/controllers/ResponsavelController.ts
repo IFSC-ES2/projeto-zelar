@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { ForeignKeyConstraintError } from "sequelize";
 import { ResponsavelService } from "../services/ResponsavelService";
 
 const service = new ResponsavelService();
@@ -49,6 +50,9 @@ export const ResponsavelController = {
       if (!deleted) return res.status(404).json({ error: 'Não encontrado' });
       res.status(204).send();
     } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return res.status(409).json({ error: 'Responsável possui ambientes vinculados e não pode ser excluído' });
+      }
       next(err);
     }
   },

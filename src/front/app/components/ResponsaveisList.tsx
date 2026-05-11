@@ -1,13 +1,57 @@
+'use client'
+
+import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
+import { useToast } from './Toast';
 import Link from 'next/link';
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+type Responsavel = {
+  id: number;
+  nome: string;
+  email: string;
+  cargo: string | null;
+  departamento: string | null;
+  telefone: string | null;
+};
+
 export default function ResponsaveisList() {
-  const responsaveis = [
-    { id: 1, nome: 'João Silva', email: 'joao.silva@empresa.com', telefone: '(11) 98765-4321', departamento: 'TI', ambientes: 2 },
-    { id: 2, nome: 'Maria Santos', email: 'maria.santos@empresa.com', telefone: '(11) 98765-4322', departamento: 'RH', ambientes: 1 },
-    { id: 3, nome: 'Pedro Costa', email: 'pedro.costa@empresa.com', telefone: '(11) 98765-4323', departamento: 'Laboratório', ambientes: 3 },
-    { id: 4, nome: 'Ana Lima', email: 'ana.lima@empresa.com', telefone: '(11) 98765-4324', departamento: 'Logística', ambientes: 1 },
-  ];
+  const [responsaveis, setResponsaveis] = useState<Responsavel[]>([]);
+  const [busca, setBusca] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetch(`${API}/responsaveis`)
+      .then(r => r.json())
+      .then(setResponsaveis)
+      .catch(() => setErro('Erro ao carregar responsáveis'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleDelete(id: number) {
+    if (!confirm('Confirmar exclusão do responsável?')) return;
+    try {
+      const res = await fetch(`${API}/responsaveis/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast(data.error ?? 'Erro ao excluir responsável', 'error');
+        return;
+      }
+      setResponsaveis(prev => prev.filter(r => r.id !== id));
+      toast('Responsável excluído com sucesso', 'success');
+    } catch {
+      toast('Erro ao excluir responsável', 'error');
+    }
+  }
+
+  const filtrados = responsaveis.filter(r =>
+    r.nome.toLowerCase().includes(busca.toLowerCase()) ||
+    r.email.toLowerCase().includes(busca.toLowerCase()) ||
+    (r.departamento ?? '').toLowerCase().includes(busca.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -26,63 +70,71 @@ export default function ResponsaveisList() {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Buscar por nome, email, departamento..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-            Filtrar
-          </button>
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <input
+            type="text"
+            placeholder="Buscar por nome, email, departamento..."
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
+            value={busca}
+            onChange={e => setBusca(e.target.value)}
+          />
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nome</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Email</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Telefone</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Departamento</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Ambientes</th>
-              <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">Ações</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {responsaveis.map((responsavel) => (
-              <tr key={responsavel.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900 font-medium">{responsavel.nome}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{responsavel.email}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{responsavel.telefone}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{responsavel.departamento}</td>
-                <td className="px-6 py-4">
-                  <span className="inline-flex px-2 py-1 text-xs rounded-full bg-purple-50 text-purple-600">
-                    {responsavel.ambientes} ambientes
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex justify-end gap-2">
-                    <Link
-                      href={`/responsaveis/editar/${responsavel.id}`}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                    >
-                      <Edit2 size={18} />
-                    </Link>
-                    <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
+      {erro && <p className="text-red-600">{erro}</p>}
+      {loading && <p className="text-gray-500">Carregando...</p>}
+
+      {!loading && !erro && (
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nome</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Email</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Telefone</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Departamento</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Cargo</th>
+                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filtrados.map((responsavel) => (
+                <tr key={responsavel.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-900 font-medium">{responsavel.nome}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{responsavel.email}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{responsavel.telefone ?? '-'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{responsavel.departamento ?? '-'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{responsavel.cargo ?? '-'}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/responsaveis/editar/${responsavel.id}`}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                      >
+                        <Edit2 size={18} />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(responsavel.id)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filtrados.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    Nenhum responsável encontrado.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

@@ -18,6 +18,7 @@ const menuItems = [
 
 const implementedRoutes: string[] = [
   '/ambientes',
+  '/responsaveis',
 ];
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {
