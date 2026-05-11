@@ -5,8 +5,9 @@
 | 1       | 246e250 | 18/03/26 | 20/03/26 | 10   | 2    |
 | 2       | 04befec | 06/04/26 | 20/03/26 | 9,5  | 2    |
 | 3       | 730e1db | 06/04/26 | 22/04/26 | 10   | 3    |
+| 4       | ab9cccf | 13/04/26 | 09/05/26 | 9,6  | 3    |
 
-**nota parcial:** 9,9
+**nota parcial:** 9,8
 
 ## Comentários
 
@@ -53,3 +54,16 @@
 5. Ficha de cada métrica: parcialmente atendido
    - Separar as fichas de cada métrica em arquivos diferentes
      - Em cada uma adicionar data do acompanhamento e valor coletado
+
+### Entrega 4
+
+1. Registro inicial de riscos do projeto: parcial
+   - A tabela horizontal dificulta a visualização;
+2. Análise e priorização dos riscos: parcial
+   - A matriz de riscos deve ter como eixos probabilidade x impacto para apresentar visualmente os riscos
+3. Plano de resposta aos riscos: atendido
+4. Consolidação do fluxo de trabalho no repositório: parcial
+5. Definição inicial de critérios de qualidade do projeto: atendido
+6. Relação entre riscos e qualidade: atendido
+7. Definição preliminar de avaliação da qualidade: atendido
+8. Atualização da documentação do projeto: atendido
