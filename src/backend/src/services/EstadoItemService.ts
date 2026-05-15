@@ -24,7 +24,7 @@ export class EstadoItemService {
 
   async findPatrimoniosVinculados(id: number) {
       return Patrimonio.findAll({
-        where: { ambiente_id: id },
+        where: { tipo_material_id: id },
         attributes: ['id', 'numero_patrimonio', 'descricao'],
       });
     }
