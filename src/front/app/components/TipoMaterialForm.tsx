@@ -4,29 +4,28 @@ import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useToast } from "./Toast";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function TipoMaterialForm() {
   const { id } = useParams();
-  const isEdit = !!id;
   const router = useRouter();
+  const isEdit = !!id;
+  const { toast } = useToast();
 
   const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isEdit) return;
-
     fetch(`${API}/tipo-material/${id}`)
-      .then((res) => res.json())
+      .then((r) => r.json())
       .then((data) => {
         setNome(data.nome ?? "");
-        setDescricao(data.descricao ?? "");
       })
-      .catch((err) => setErro(err.message));
+      .catch(() => setErro("Erro ao carregar tipo de material"));
   }, [id, isEdit]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -39,30 +38,32 @@ export default function TipoMaterialForm() {
     }
 
     setLoading(true);
-
-    const body = {
-      nome: nome.trim(),
-      descricao: descricao.trim() || null,
-    };
+    const body = { nome: nome.trim() };
 
     try {
       const url = isEdit
         ? `${API}/tipo-material/${id}`
         : `${API}/tipo-material`;
-
       const method = isEdit ? "PUT" : "POST";
-
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-
       if (!res.ok) {
+        if (res.status === 409) {
+          setErro("Já existe um tipo de material com esse nome");
+          return;
+        }
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error ?? "Erro ao salvar");
       }
-
+      toast(
+        isEdit
+          ? "Tipo de material atualizado com sucesso"
+          : "Tipo de material cadastrado com sucesso",
+        "success",
+      );
       router.push("/tipos-material");
     } catch (err: unknown) {
       setErro(err instanceof Error ? err.message : "Erro ao salvar");
@@ -89,6 +90,7 @@ export default function TipoMaterialForm() {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg p-6">
+        {erro && <p className="text-red-600 mb-4">{erro}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -107,28 +109,21 @@ export default function TipoMaterialForm() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Descrição
-                </label>
-                <textarea
-                  rows={3}
-                  value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
-                  placeholder="Descrição do tipo de material..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                ></textarea>
-              </div>
             </div>
           </div>
 
           <div className="flex gap-4 pt-4 border-t border-gray-200">
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              disabled={loading}
+              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               <Save size={20} />
-              {isEdit ? "Salvar Alterações" : "Cadastrar Tipo"}
+              {loading
+                ? "Salvando..."
+                : isEdit
+                  ? "Salvar Alterações"
+                  : "Cadastrar Tipo"}
             </button>
             <Link
               href="/tipos-material"
