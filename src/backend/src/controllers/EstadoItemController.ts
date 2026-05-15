@@ -47,7 +47,13 @@ export const EstadoItemController = {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);
-      //Verificar se tem patrimonios com este EstadoItem
+      const vinculados = await service.findPatrimoniosVinculados(id);
+      if (vinculados.length > 0) {
+        return res.status(409).json({
+          error: 'Estado de item possui patrimônios vinculados e não pode ser excluído. Reatribua os patrimônios antes de excluir.',
+          patrimonios: vinculados.map(p => ({ id: p.id, numero_patrimonio: p.numero_patrimonio, descricao: p.descricao })),
+        });
+      }
       const deleted = await service.delete(id);
       if (!deleted) return res.status(404).json({ error: 'Não encontrado' });
       res.status(204).send();
