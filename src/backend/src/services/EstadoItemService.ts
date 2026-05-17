@@ -23,11 +23,11 @@ export class EstadoItemService {
   }
 
   async findPatrimoniosVinculados(id: number) {
-      return Patrimonio.findAll({
-        where: { tipo_material_id: id },
-        attributes: ['id', 'numero_patrimonio', 'descricao'],
-      });
-    }
+    return Patrimonio.findAll({
+      where: { estado_item_id: id },
+      attributes: ['id', 'numero_patrimonio', 'descricao'],
+    });
+  }
 
   delete(id: number) {
     return this.repo.delete(id);

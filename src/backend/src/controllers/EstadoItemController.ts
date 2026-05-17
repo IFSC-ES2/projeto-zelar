@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ForeignKeyConstraintError, UniqueConstraintError } from "sequelize";
+import { UniqueConstraintError } from "sequelize";
 import { EstadoItemService } from "../services/EstadoItemService";
 
 const service = new EstadoItemService();
