@@ -22,10 +22,7 @@ export class FornecedorService {
     return this.repo.update(id, data);
   }
 
-  /**
-   * Busca patrimônios que foram adquiridos através deste fornecedor.
-   * Importante para a trava de segurança na exclusão (conforme o controller).
-   */
+
   async findPatrimoniosVinculados(id: number) {
     return Patrimonio.findAll({
       where: { fornecedor_id: id },
