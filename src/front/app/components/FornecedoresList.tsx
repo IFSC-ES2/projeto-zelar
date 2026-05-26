@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
 import { useToast } from './Toast';
 import Link from 'next/link';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '../lib/api';
 
 type Fornecedor = {
   id: number;
@@ -23,7 +22,7 @@ export default function FornecedoresList() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch(`${API}/fornecedores`)
+    fetch(`${API_URL}/fornecedores`)
       .then(r => r.json())
       .then(setFornecedores)
       .catch(() => setErro('Erro ao carregar fornecedores'))
@@ -34,7 +33,7 @@ export default function FornecedoresList() {
     if (!confirm('Confirmar exclusao do fornecedor?')) return;
 
     try {
-      const res = await fetch(`${API}/fornecedores/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/fornecedores/${id}`, { method: 'DELETE' });
       if (res.status === 409) {
         const data = await res.json().catch(() => ({}));
         const lista = (data.patrimonios as { numero_patrimonio: string; descricao: string }[] | undefined)

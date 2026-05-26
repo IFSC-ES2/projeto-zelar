@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
 import { useToast } from './Toast';
 import Link from 'next/link';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '../lib/api';
 
 type Responsavel = {
   id: number;
@@ -24,7 +23,7 @@ export default function ResponsaveisList() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch(`${API}/responsaveis`)
+    fetch(`${API_URL}/responsaveis`)
       .then(r => r.json())
       .then(setResponsaveis)
       .catch(() => setErro('Erro ao carregar responsáveis'))
@@ -34,7 +33,7 @@ export default function ResponsaveisList() {
   async function handleDelete(id: number) {
     if (!confirm('Confirmar exclusão do responsável?\n\nAmbientes vinculados a ele perderão o responsável automaticamente.')) return;
     try {
-      const res = await fetch(`${API}/responsaveis/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/responsaveis/${id}`, { method: 'DELETE' });
       if (res.status === 409) {
         const data = await res.json().catch(() => ({}));
         const listaPatrimonios = (data.patrimonios as { numero_patrimonio: string; descricao: string }[] | undefined)

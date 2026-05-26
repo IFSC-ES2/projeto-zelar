@@ -4,8 +4,7 @@ import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from "../lib/api";
 
 type Responsavel = { id: number; nome: string };
 
@@ -23,7 +22,7 @@ export default function AmbienteForm() {
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API}/responsaveis`)
+    fetch(`${API_URL}/responsaveis`)
       .then((r) => r.json())
       .then(setResponsaveis)
       .catch(() => {});
@@ -31,7 +30,7 @@ export default function AmbienteForm() {
 
   useEffect(() => {
     if (!isEdit) return;
-    fetch(`${API}/ambientes/${id}`)
+    fetch(`${API_URL}/ambientes/${id}`)
       .then((r) => r.json())
       .then((data) => {
         setNome(data.nome ?? "");
@@ -62,7 +61,7 @@ export default function AmbienteForm() {
     };
 
     try {
-      const url = isEdit ? `${API}/ambientes/${id}` : `${API}/ambientes`;
+      const url = isEdit ? `${API_URL}/ambientes/${id}` : `${API_URL}/ambientes`;
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
         method,

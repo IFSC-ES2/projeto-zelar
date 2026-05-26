@@ -4,8 +4,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '../lib/api';
 
 export default function FornecedorForm() {
   const { id } = useParams();
@@ -21,7 +20,7 @@ export default function FornecedorForm() {
 
   useEffect(() => {
     if (!isEdit) return;
-    fetch(`${API}/fornecedores/${id}`)
+    fetch(`${API_URL}/fornecedores/${id}`)
       .then(r => r.json())
       .then(data => {
         setNome(data.nome ?? '');
@@ -54,7 +53,7 @@ export default function FornecedorForm() {
     };
 
     try {
-      const url = isEdit ? `${API}/fornecedores/${id}` : `${API}/fornecedores`;
+      const url = isEdit ? `${API_URL}/fornecedores/${id}` : `${API_URL}/fornecedores`;
       const method = isEdit ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
