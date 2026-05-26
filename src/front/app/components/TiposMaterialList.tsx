@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, Search, Edit2, Trash2 } from "lucide-react";
 import { useToast } from "./Toast";
 import Link from "next/link";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from "../lib/api";
 
 type TipoMaterial = {
   id: number;
@@ -20,7 +19,7 @@ export default function TiposMaterialList() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch(`${API}/tipo-material`)
+    fetch(`${API_URL}/tipo-material`)
       .then((r) => r.json())
       .then(setTipos)
       .catch(() => setErro("Erro ao carregar tipos de material"))
@@ -30,7 +29,7 @@ export default function TiposMaterialList() {
   async function handleDelete(id: number) {
     if (!confirm("Confirmar exclusão do tipo de material?")) return;
     try {
-      const res = await fetch(`${API}/tipo-material/${id}`, {
+      const res = await fetch(`${API_URL}/tipo-material/${id}`, {
         method: "DELETE",
       });
       if (res.status === 409) {

@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
 import { useToast } from './Toast';
 import Link from 'next/link';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '../lib/api';
 
 type Ambiente = {
   id: number;
@@ -23,7 +22,7 @@ export default function AmbientesList() {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch(`${API}/ambientes`)
+    fetch(`${API_URL}/ambientes`)
       .then(r => r.json())
       .then(setAmbientes)
       .catch(() => setErro('Erro ao carregar ambientes'))
@@ -33,7 +32,7 @@ export default function AmbientesList() {
   async function handleDelete(id: number) {
     if (!confirm('Confirmar exclusão do ambiente?')) return;
     try {
-      const res = await fetch(`${API}/ambientes/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/ambientes/${id}`, { method: 'DELETE' });
       if (res.status === 409) {
         const data = await res.json().catch(() => ({}));
         const lista = (data.patrimonios as { numero_patrimonio: string; descricao: string }[] | undefined)

@@ -29,6 +29,7 @@ const menuItems = [
 
 const implementedRoutes: string[] = [
   "/ambientes",
+  "/fornecedores",
   "/responsaveis",
   "/tipos-material",
 ];
@@ -95,7 +96,7 @@ export default function SidebarLayout({
         {showBanner && isPrototype && (
           <div className="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-amber-800 text-sm">
-              <span className="font-semibold">⚠ Protótipo</span>
+              <span className="font-semibold">Protótipo</span>
               <span>
                 Esta aplicação está em desenvolvimento. As funcionalidades desta
                 página ainda não foram implementadas.

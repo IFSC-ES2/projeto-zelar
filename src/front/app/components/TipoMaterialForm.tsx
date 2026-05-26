@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "./Toast";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from "../lib/api";
 
 export default function TipoMaterialForm() {
   const { id } = useParams();
@@ -20,7 +19,7 @@ export default function TipoMaterialForm() {
 
   useEffect(() => {
     if (!isEdit) return;
-    fetch(`${API}/tipo-material/${id}`)
+    fetch(`${API_URL}/tipo-material/${id}`)
       .then((r) => r.json())
       .then((data) => {
         setNome(data.nome ?? "");
@@ -42,8 +41,8 @@ export default function TipoMaterialForm() {
 
     try {
       const url = isEdit
-        ? `${API}/tipo-material/${id}`
-        : `${API}/tipo-material`;
+        ? `${API_URL}/tipo-material/${id}`
+        : `${API_URL}/tipo-material`;
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
         method,

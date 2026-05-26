@@ -4,8 +4,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { API_URL } from '../lib/api';
 
 export default function ResponsavelForm() {
   const { id } = useParams();
@@ -22,7 +21,7 @@ export default function ResponsavelForm() {
 
   useEffect(() => {
     if (!isEdit) return;
-    fetch(`${API}/responsaveis/${id}`)
+    fetch(`${API_URL}/responsaveis/${id}`)
       .then(r => r.json())
       .then(data => {
         setNome(data.nome ?? '');
@@ -57,7 +56,7 @@ export default function ResponsavelForm() {
     };
 
     try {
-      const url = isEdit ? `${API}/responsaveis/${id}` : `${API}/responsaveis`;
+      const url = isEdit ? `${API_URL}/responsaveis/${id}` : `${API_URL}/responsaveis`;
       const method = isEdit ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
