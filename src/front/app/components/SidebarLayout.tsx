@@ -27,24 +27,9 @@ const menuItems = [
   { path: "/estados-item", icon: AlertCircle, label: "Estados do Item" },
 ];
 
-const implementedRoutes: string[] = [
-  "/ambientes",
-  "/fornecedores",
-  "/responsaveis",
-  "/tipos-material",
-];
-
-export default function SidebarLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SidebarLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
-  const isPrototype = !implementedRoutes.some(
-    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/"),
-  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -93,24 +78,9 @@ export default function SidebarLayout({
           </div>
         </header>
 
-        {showBanner && isPrototype && (
-          <div className="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-amber-800 text-sm">
-              <span className="font-semibold">Protótipo</span>
-              <span>
-                Esta aplicação está em desenvolvimento. As funcionalidades desta
-                página ainda não foram implementadas.
-              </span>
-            </div>
-            <button
-              onClick={() => setShowBanner(false)}
-              className="text-amber-600 hover:text-amber-800 font-medium text-sm shrink-0"
-            >
-              Fechar
-            </button>
-          </div>
-        )}
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-6">
+          {children}
+        </main>
       </div>
     </div>
   );
