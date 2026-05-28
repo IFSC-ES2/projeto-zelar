@@ -20,5 +20,11 @@ Fornecedor.init(
     telefone: { type: DataTypes.STRING(20), allowNull: true },
     email: { type: DataTypes.STRING(100), allowNull: true },
   },
-  { sequelize, tableName: 'fornecedor', timestamps: false }
+  {
+    sequelize,
+    tableName: 'fornecedor',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  }
 );

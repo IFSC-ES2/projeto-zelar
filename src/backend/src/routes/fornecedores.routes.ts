@@ -4,6 +4,8 @@ import { FornecedorController } from "../controllers/FornecedoresController";
 const router = Router();
 
 router.get("/", FornecedorController.findAll);
+router.get("/deletados", FornecedorController.listDeletados);
+router.patch("/:id/restaurar", FornecedorController.restaurar);
 router.get("/:id", FornecedorController.findById);
 router.post("/", FornecedorController.create);
 router.put("/:id", FornecedorController.update);

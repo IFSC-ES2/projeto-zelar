@@ -32,4 +32,12 @@ export class AmbienteService {
   delete(id: number) {
     return this.repo.delete(id);
   }
+
+  findDeleted() {
+    return this.repo.findDeleted();
+  }
+
+  restore(id: number) {
+    return this.repo.restore(id);
+  }
 }

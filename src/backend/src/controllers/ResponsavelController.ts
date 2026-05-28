@@ -43,6 +43,25 @@ export const ResponsavelController = {
     }
   },
 
+  async listDeletados(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const items = await service.findDeleted();
+      res.json(items);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async restaurar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const item = await service.restore(Number(req.params.id));
+      if (!item) return res.status(404).json({ error: 'Não encontrado' });
+      res.json(item);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const id = Number(req.params.id);

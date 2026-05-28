@@ -20,5 +20,11 @@ Ambiente.init(
     andar: { type: DataTypes.STRING(20), allowNull: true },
     responsavel_id: { type: DataTypes.INTEGER, allowNull: true },
   },
-  { sequelize, tableName: 'ambiente', timestamps: false }
+  {
+    sequelize,
+    tableName: 'ambiente',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  }
 );

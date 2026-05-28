@@ -16,5 +16,11 @@ EstadoItem.init(
     nome: { type: DataTypes.STRING(50), allowNull: false },
     descricao: { type: DataTypes.TEXT, allowNull: true },
   },
-  { sequelize, tableName: 'estado_item', timestamps: false }
+  {
+    sequelize,
+    tableName: 'estado_item',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  }
 );

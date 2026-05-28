@@ -1,12 +1,18 @@
 CREATE TABLE tipo_material (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL
+    nome VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE estado_item (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
-    descricao TEXT
+    descricao TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE fornecedor (
@@ -14,7 +20,10 @@ CREATE TABLE fornecedor (
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(18),
     telefone VARCHAR(20),
-    email VARCHAR(100)
+    email VARCHAR(100),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 ------
@@ -25,7 +34,10 @@ CREATE TABLE responsavel (
     email VARCHAR(100) NOT NULL,
     cargo VARCHAR(50),
     departamento VARCHAR(50),
-    telefone VARCHAR(20)
+    telefone VARCHAR(20),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE conferente (
@@ -33,7 +45,10 @@ CREATE TABLE conferente (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     cargo VARCHAR(50),
-    telefone VARCHAR(20)
+    telefone VARCHAR(20),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 ------
@@ -43,7 +58,10 @@ CREATE TABLE ambiente (
     nome VARCHAR(100) NOT NULL,
     bloco VARCHAR(50),
     andar VARCHAR(20),
-    responsavel_id INT REFERENCES responsavel(id)
+    responsavel_id INT REFERENCES responsavel(id),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE patrimonio (
@@ -56,5 +74,8 @@ CREATE TABLE patrimonio (
     estado_item_id INT NOT NULL REFERENCES estado_item(id),
     ambiente_id INT NOT NULL REFERENCES ambiente(id),
     responsavel_id INT NOT NULL REFERENCES responsavel(id),
-    fornecedor_id INT REFERENCES fornecedor(id)
+    fornecedor_id INT REFERENCES fornecedor(id),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );

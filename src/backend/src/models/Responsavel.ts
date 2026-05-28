@@ -22,5 +22,11 @@ Responsavel.init(
     departamento: { type: DataTypes.STRING(50), allowNull: true },
     telefone: { type: DataTypes.STRING(20), allowNull: true },
   },
-  { sequelize, tableName: 'responsavel', timestamps: false }
+  {
+    sequelize,
+    tableName: 'responsavel',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  }
 );

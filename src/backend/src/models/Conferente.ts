@@ -20,5 +20,11 @@ Conferente.init(
     cargo: { type: DataTypes.STRING(50), allowNull: true },
     telefone: { type: DataTypes.STRING(20), allowNull: true },
   },
-  { sequelize, tableName: 'conferente', timestamps: false }
+  {
+    sequelize,
+    tableName: 'conferente',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  }
 );
