@@ -1,0 +1,48 @@
+databases:
+  - name: zelium-db
+    databaseName: zelar
+    user: zelar
+    plan: free
+
+services:
+  - type: web
+    name: zelium-backend
+    runtime: docker
+    dockerfilePath: src/backend/Dockerfile
+    dockerContext: src
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: CORS_ORIGIN
+        value: https://zelium.onrender.com
+      - key: DB_HOST
+        fromDatabase:
+          name: zelium-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: zelium-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: zelium-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: zelium-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: zelium-db
+          property: password
+
+  - type: web
+    name: zelium
+    runtime: docker
+    dockerfilePath: src/front/Dockerfile
+    dockerContext: src/front
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://zelium-backend.onrender.com/api
