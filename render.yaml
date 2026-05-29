@@ -1,0 +1,46 @@
+databases:
+  - name: zelar-db
+    databaseName: zelar
+    user: zelar
+    plan: free
+
+services:
+  - type: web
+    name: zelar-backend
+    runtime: docker
+    dockerfilePath: src/backend/Dockerfile
+    dockerContext: src/backend
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DB_HOST
+        fromDatabase:
+          name: zelar-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: zelar-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: zelar-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: zelar-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: zelar-db
+          property: password
+
+  - type: web
+    name: zelar-frontend
+    runtime: docker
+    dockerfilePath: src/front/Dockerfile
+    dockerContext: src/front
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://zelar-backend.onrender.com/api
