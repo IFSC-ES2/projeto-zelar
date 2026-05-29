@@ -6,6 +6,7 @@ import fornecedoresRoutes from "./fornecedores.routes";
 import patrimonioRoutes from "./patrimonio.routes";
 import responsavelRoutes from "./responsavel.routes";
 import tipoMaterialRoutes from "./tipoMaterial.routes";
+import auditLogRoutes from "./auditLog.routes";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/fornecedores", fornecedoresRoutes);
 router.use("/patrimonios", patrimonioRoutes);
 router.use("/responsaveis", responsavelRoutes);
 router.use("/tipo-material", tipoMaterialRoutes);
+router.use("/audit-log", auditLogRoutes);
 
 export default router;

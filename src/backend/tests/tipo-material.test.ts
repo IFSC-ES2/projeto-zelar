@@ -4,7 +4,9 @@ import { TipoMaterialService } from "../src/services/TipoMaterialService";
 
 jest.mock("../src/services/TipoMaterialService");
 
-const MockedService = TipoMaterialService as jest.MockedClass<typeof TipoMaterialService>;
+const MockedService = TipoMaterialService as jest.MockedClass<
+  typeof TipoMaterialService
+>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -73,7 +75,9 @@ describe("POST /api/tipo-material", () => {
   });
 
   it("500 quando service lança erro", async () => {
-    (MockedService.prototype.create as jest.Mock).mockRejectedValue(new Error("DB error"));
+    (MockedService.prototype.create as jest.Mock).mockRejectedValue(
+      new Error("DB error"),
+    );
 
     const res = await request(app)
       .post("/api/tipo-material")
@@ -110,7 +114,9 @@ describe("PUT /api/tipo-material/:id", () => {
   });
 
   it("500 quando service lança erro", async () => {
-    (MockedService.prototype.update as jest.Mock).mockRejectedValue(new Error("DB error"));
+    (MockedService.prototype.update as jest.Mock).mockRejectedValue(
+      new Error("DB error"),
+    );
 
     const res = await request(app)
       .put("/api/tipo-material/1")
@@ -123,7 +129,9 @@ describe("PUT /api/tipo-material/:id", () => {
 
 describe("DELETE /api/tipo-material/:id", () => {
   it("204 quando removido sem vínculos", async () => {
-    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue([]);
+    (
+      MockedService.prototype.findPatrimoniosVinculados as jest.Mock
+    ).mockResolvedValue([]);
     (MockedService.prototype.delete as jest.Mock).mockResolvedValue(true);
 
     const res = await request(app).delete("/api/tipo-material/1");
@@ -133,7 +141,9 @@ describe("DELETE /api/tipo-material/:id", () => {
   });
 
   it("404 quando id não existe", async () => {
-    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue([]);
+    (
+      MockedService.prototype.findPatrimoniosVinculados as jest.Mock
+    ).mockResolvedValue([]);
     (MockedService.prototype.delete as jest.Mock).mockResolvedValue(false);
 
     const res = await request(app).delete("/api/tipo-material/999");
@@ -147,7 +157,9 @@ describe("DELETE /api/tipo-material/:id", () => {
       { id: 1, numero_patrimonio: "2024/001", descricao: "Computador Dell" },
       { id: 2, numero_patrimonio: "2024/002", descricao: "Monitor LG" },
     ];
-    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockResolvedValue(patrimonios);
+    (
+      MockedService.prototype.findPatrimoniosVinculados as jest.Mock
+    ).mockResolvedValue(patrimonios);
 
     const res = await request(app).delete("/api/tipo-material/1");
 
@@ -161,9 +173,9 @@ describe("DELETE /api/tipo-material/:id", () => {
   });
 
   it("500 quando service lança erro", async () => {
-    (MockedService.prototype.findPatrimoniosVinculados as jest.Mock).mockRejectedValue(
-      new Error("DB error")
-    );
+    (
+      MockedService.prototype.findPatrimoniosVinculados as jest.Mock
+    ).mockRejectedValue(new Error("DB error"));
 
     const res = await request(app).delete("/api/tipo-material/1");
 

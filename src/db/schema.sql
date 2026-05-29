@@ -86,3 +86,15 @@ CREATE TABLE patrimonio (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP NULL
 );
+
+CREATE TABLE audit_log (
+    id SERIAL PRIMARY KEY,
+    tabela VARCHAR(100) NOT NULL,
+    registro_id INT NOT NULL,
+    acao VARCHAR(20) NOT NULL,
+    dados_anteriores JSONB,
+    dados_novos JSONB,
+    campos_alterados JSONB,
+    usuario VARCHAR(100) NOT NULL DEFAULT 'sistema',
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
