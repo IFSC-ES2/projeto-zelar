@@ -8,6 +8,7 @@ export class EstadoItem extends Model<
   declare id: CreationOptional<number>;
   declare nome: string;
   declare descricao: string | null;
+  declare versao: CreationOptional<number>;
 }
 
 EstadoItem.init(
@@ -15,6 +16,7 @@ EstadoItem.init(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     nome: { type: DataTypes.STRING(50), allowNull: false },
     descricao: { type: DataTypes.TEXT, allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
   {
     sequelize,
@@ -22,5 +24,6 @@ EstadoItem.init(
     timestamps: true,
     paranoid: true,
     underscored: true,
+    version: 'versao',
   }
 );

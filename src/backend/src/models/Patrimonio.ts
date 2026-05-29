@@ -15,6 +15,7 @@ export class Patrimonio extends Model<
   declare ambiente_id: number;
   declare responsavel_id: number;
   declare fornecedor_id: number | null;
+  declare versao: CreationOptional<number>;
 }
 
 Patrimonio.init(
@@ -29,6 +30,7 @@ Patrimonio.init(
     ambiente_id: { type: DataTypes.INTEGER, allowNull: false },
     responsavel_id: { type: DataTypes.INTEGER, allowNull: false },
     fornecedor_id: { type: DataTypes.INTEGER, allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
   {
     sequelize,
@@ -36,5 +38,6 @@ Patrimonio.init(
     timestamps: true,
     paranoid: true,
     underscored: true,
+    version: 'versao',
   }
 );

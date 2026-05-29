@@ -10,6 +10,7 @@ export class Ambiente extends Model<
   declare bloco: string | null;
   declare andar: string | null;
   declare responsavel_id: number | null;
+  declare versao: CreationOptional<number>;
 }
 
 Ambiente.init(
@@ -19,6 +20,7 @@ Ambiente.init(
     bloco: { type: DataTypes.STRING(50), allowNull: true },
     andar: { type: DataTypes.STRING(20), allowNull: true },
     responsavel_id: { type: DataTypes.INTEGER, allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
   {
     sequelize,
@@ -26,5 +28,6 @@ Ambiente.init(
     timestamps: true,
     paranoid: true,
     underscored: true,
+    version: 'versao',
   }
 );
