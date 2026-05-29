@@ -32,5 +32,12 @@ Patrimonio.init(
     fornecedor_id: { type: DataTypes.INTEGER, allowNull: true },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'patrimonio', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'patrimonio',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

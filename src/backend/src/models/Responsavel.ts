@@ -24,5 +24,12 @@ Responsavel.init(
     telefone: { type: DataTypes.STRING(20), allowNull: true },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'responsavel', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'responsavel',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

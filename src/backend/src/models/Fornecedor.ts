@@ -22,5 +22,12 @@ Fornecedor.init(
     email: { type: DataTypes.STRING(100), allowNull: true },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'fornecedor', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'fornecedor',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

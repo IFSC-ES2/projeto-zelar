@@ -44,11 +44,12 @@ async function validateSchema(model: ModelStatic<Model>) {
   const modelAttributes = model.getAttributes();
 
   for (const [columnName, attrDef] of Object.entries(modelAttributes)) {
-    expect(dbColumns).toHaveProperty(columnName);
+    const dbColumnName = (attrDef.field as string) || columnName;
+    expect(dbColumns).toHaveProperty(dbColumnName);
 
     const isPrimaryKey = attrDef.primaryKey === true;
     const expectedAllowNull = !isPrimaryKey && attrDef.allowNull !== false;
-    expect(dbColumns[columnName].allowNull).toBe(expectedAllowNull);
+    expect(dbColumns[dbColumnName].allowNull).toBe(expectedAllowNull);
   }
 }
 

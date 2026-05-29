@@ -22,5 +22,12 @@ Ambiente.init(
     responsavel_id: { type: DataTypes.INTEGER, allowNull: true },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'ambiente', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'ambiente',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

@@ -16,5 +16,12 @@ TipoMaterial.init(
     nome: { type: DataTypes.STRING(50), allowNull: false },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'tipo_material', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'tipo_material',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

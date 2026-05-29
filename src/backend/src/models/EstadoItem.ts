@@ -18,5 +18,12 @@ EstadoItem.init(
     descricao: { type: DataTypes.TEXT, allowNull: true },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'estado_item', timestamps: false, version: true }
+  {
+    sequelize,
+    tableName: 'estado_item',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

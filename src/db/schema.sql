@@ -1,14 +1,20 @@
 CREATE TABLE tipo_material (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE estado_item (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     descricao TEXT,
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE fornecedor (
@@ -17,7 +23,10 @@ CREATE TABLE fornecedor (
     cnpj VARCHAR(18),
     telefone VARCHAR(20),
     email VARCHAR(100),
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 ------
@@ -29,7 +38,10 @@ CREATE TABLE responsavel (
     cargo VARCHAR(50),
     departamento VARCHAR(50),
     telefone VARCHAR(20),
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE conferente (
@@ -38,7 +50,10 @@ CREATE TABLE conferente (
     email VARCHAR(100) NOT NULL,
     cargo VARCHAR(50),
     telefone VARCHAR(20),
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 ------
@@ -49,7 +64,10 @@ CREATE TABLE ambiente (
     bloco VARCHAR(50),
     andar VARCHAR(20),
     responsavel_id INT REFERENCES responsavel(id),
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE patrimonio (
@@ -63,5 +81,8 @@ CREATE TABLE patrimonio (
     ambiente_id INT NOT NULL REFERENCES ambiente(id),
     responsavel_id INT NOT NULL REFERENCES responsavel(id),
     fornecedor_id INT REFERENCES fornecedor(id),
-    versao INTEGER DEFAULT 1 NOT NULL
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
 );

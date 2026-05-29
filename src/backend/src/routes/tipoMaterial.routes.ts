@@ -4,6 +4,8 @@ import { TipoMaterialController } from "../controllers/TipoMaterialController";
 const router = Router();
 
 router.get("/", TipoMaterialController.findAll);
+router.get("/deletados", TipoMaterialController.listDeletados);
+router.patch("/:id/restaurar", TipoMaterialController.restaurar);
 router.get("/:id", TipoMaterialController.findById);
 router.post("/", TipoMaterialController.create);
 router.put("/:id", TipoMaterialController.update);
