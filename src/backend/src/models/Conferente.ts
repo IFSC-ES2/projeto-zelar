@@ -10,6 +10,7 @@ export class Conferente extends Model<
   declare email: string;
   declare cargo: string | null;
   declare telefone: string | null;
+  declare versao: CreationOptional<number>;
 }
 
 Conferente.init(
@@ -19,6 +20,7 @@ Conferente.init(
     email: { type: DataTypes.STRING(100), allowNull: false },
     cargo: { type: DataTypes.STRING(50), allowNull: true },
     telefone: { type: DataTypes.STRING(20), allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'conferente', timestamps: false }
+  { sequelize, tableName: 'conferente', timestamps: false, version: true }
 );
