@@ -3,17 +3,11 @@ import routes from "./routes";
 
 const app = express();
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN ?? '*';
-
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (CORS_ORIGIN === '*' || origin === CORS_ORIGIN) {
-    res.header('Access-Control-Allow-Origin', origin ?? '*');
-  }
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  if (req.method === 'OPTIONS') return res.status(204).send('');
   next();
 });
 
