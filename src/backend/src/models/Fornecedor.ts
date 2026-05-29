@@ -10,6 +10,7 @@ export class Fornecedor extends Model<
   declare cnpj: string | null;
   declare telefone: string | null;
   declare email: string | null;
+  declare versao: CreationOptional<number>;
 }
 
 Fornecedor.init(
@@ -19,6 +20,14 @@ Fornecedor.init(
     cnpj: { type: DataTypes.STRING(18), allowNull: true },
     telefone: { type: DataTypes.STRING(20), allowNull: true },
     email: { type: DataTypes.STRING(100), allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'fornecedor', timestamps: false }
+  {
+    sequelize,
+    tableName: 'fornecedor',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

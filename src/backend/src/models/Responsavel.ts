@@ -11,6 +11,7 @@ export class Responsavel extends Model<
   declare cargo: string | null;
   declare departamento: string | null;
   declare telefone: string | null;
+  declare versao: CreationOptional<number>;
 }
 
 Responsavel.init(
@@ -21,6 +22,14 @@ Responsavel.init(
     cargo: { type: DataTypes.STRING(50), allowNull: true },
     departamento: { type: DataTypes.STRING(50), allowNull: true },
     telefone: { type: DataTypes.STRING(20), allowNull: true },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'responsavel', timestamps: false }
+  {
+    sequelize,
+    tableName: 'responsavel',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

@@ -9,6 +9,20 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: zelar
+          POSTGRES_PASSWORD: zelar
+          POSTGRES_DB: zelar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +40,12 @@ jobs:
       - name: Run tests
         working-directory: src/backend
         run: npm test
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: zelar
+          DB_USER: zelar
+          DB_PASSWORD: zelar
 
   frontend:
     runs-on: ubuntu-latest

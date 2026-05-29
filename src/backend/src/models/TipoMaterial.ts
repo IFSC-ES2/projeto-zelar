@@ -7,12 +7,21 @@ export class TipoMaterial extends Model<
 > {
   declare id: CreationOptional<number>;
   declare nome: string;
+  declare versao: CreationOptional<number>;
 }
 
 TipoMaterial.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     nome: { type: DataTypes.STRING(50), allowNull: false },
+    versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
-  { sequelize, tableName: 'tipo_material', timestamps: false }
+  {
+    sequelize,
+    tableName: 'tipo_material',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+    version: 'versao',
+  }
 );

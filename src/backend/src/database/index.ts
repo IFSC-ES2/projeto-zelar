@@ -4,6 +4,7 @@ import { Fornecedor } from "../models/Fornecedor";
 import { Patrimonio } from "../models/Patrimonio";
 import { Responsavel } from "../models/Responsavel";
 import { TipoMaterial } from "../models/TipoMaterial";
+import { AuditLog } from "../models/AuditLog";
 
 Ambiente.belongsTo(Responsavel, { foreignKey: "responsavel_id" });
 Responsavel.hasMany(Ambiente, { foreignKey: "responsavel_id" });

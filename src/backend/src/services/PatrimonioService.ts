@@ -1,9 +1,9 @@
-import { CreationAttributes } from "sequelize";
-import { Conferente } from "../models/Conferente";
-import { ConferenteRepository } from "../repositories/ConferenteRepository";
+import { CreationAttributes } from 'sequelize';
+import { Patrimonio } from '../models/Patrimonio';
+import { PatrimonioRepository } from '../repositories/PatrimonioRepository';
 
-export class ConferenteService {
-  private repo = new ConferenteRepository();
+export class PatrimonioService {
+  private repo = new PatrimonioRepository();
 
   findAll() {
     return this.repo.findAll();
@@ -13,11 +13,11 @@ export class ConferenteService {
     return this.repo.findById(id);
   }
 
-  create(data: CreationAttributes<Conferente>) {
+  create(data: CreationAttributes<Patrimonio>) {
     return this.repo.create(data);
   }
 
-  update(id: number, data: Partial<CreationAttributes<Conferente>>) {
+  update(id: number, data: Partial<CreationAttributes<Patrimonio>>) {
     return this.repo.update(id, data);
   }
 
