@@ -10,15 +10,19 @@
 | 5       | Letícia Helena do R. Furlan   | a077309 | 14/05/26 | 24/05/26 | 6,4  | 10   |
 | 5       | Lucas Barbieri Catarina       | a077309 | 14/05/26 | 24/05/26 | 7,5  | 10   |
 | 5       | Vinicíus Martins de M. Lopes  | a077309 | 14/05/26 | 24/05/26 | 4,0  | 10   |
+| 6       | Leonardo D. de Martini        | 3e01515 | 26/05/26 | 28/05/26 | 5,4  | 10   |
+| 6       | Letícia Helena do R. Furlan   | 3e01515 | 26/05/26 | 28/05/26 | 5,8  | 10   |
+| 6       | Lucas Barbieri Catarina       | 3e01515 | 26/05/26 | 28/05/26 | 6,4  | 10   |
+| 6       | Vinicíus Martins de M. Lopes  | 3e01515 | 26/05/26 | 28/05/26 | 5,5  | 10   |
 
 ## Nota parcial
 
 | aluno                         | nota parcial |
 | ----------------------------- | ------------ |
-| Leonardo D. de Martini        | 9,1          |
-| Letícia Helena do R. Furlan   | 8,1          |
-| Lucas Barbieri Catarina       | 8,6          |
-| Vinicíus Martins de M. Lopes  | 6,9          |
+| Leonardo D. de Martini        | 7,9          |
+| Letícia Helena do R. Furlan   | 7,3          |
+| Lucas Barbieri Catarina       | 7,9          |
+| Vinicíus Martins de M. Lopes  | 6,4          |
 
 ## Comentários
 
@@ -112,6 +116,43 @@
    - As instruções de execução são insuficientes no README raiz; há `docker-compose.yml` funcional em `src`, mas o caminho e os comandos de execução/testes não estão claramente documentados no ponto de entrada do projeto.
    - `src/front/README.md` ainda é o README padrão do Next.js, sem instruções específicas do produto.
 8. Release do marco: atendido.
-   - Tag `v0.1.0` criada no commit `a077309`.
-   - Release `Primeira Release` publicada no GitHub.
+    - Tag `v0.1.0` criada no commit `a077309`.
+    - Release `Primeira Release` publicada no GitHub.
 
+### Entrega 6
+
+1. Incremento funcional do MVP: parcial.
+   - Funcionalidade declaradas para entrega na Sprint 2:
+      - Leonardo de Martini (Devops/QA): Pipeline de testes automáticos: configuração da esteira de Integração Contínua (CI) para execução automática de testes unitários e de integração a cada novo deploy.
+      - Lucas Barbieri (Desenvolvedor Back-End): CRUD de Tipos de Material: implementação da lógica de negócio e persistência para a categorização de materiais no sistema.
+      - Letícia Furlan: CRUD Fornecedores: implementação do módulo de cadastro de fornecedores, garantindo a captura de atributos essenciais de identificação e o estabelecimento de vínculos relacionais com as categorias de materiais fornecidos.
+      - Vinicius Lopes: CRUD Estado do ítem: implementação das funcionalidades de controle de status (ex: novo, usado, danificado) dos itens do inventário; CRUD Patrimônio: desenvolvimento do sistema de registro e controle de bens patrimoniais, incluindo a geração de identificadores únicos.
+   - O CRUD de Patrimônio, funcionalidade central do MVP, ainda não está entregue: a issue `#8` permanece aberta, não há controller/rota/service de patrimônio no backend, e `PatrimoniosList`, `PatrimonioForm` e `RegistroEstado` ainda usam dados fixos ou formulários sem submissão real.
+   - O relatório afirma que Vinícius desenvolveu CRUD de Patrimônio e registro/controle de bens patrimoniais, mas essa afirmação não corresponde ao estado final da entrega.
+2. Testes automatizados: atendido.
+3. Integração contínua mínima: parcial.
+   - O CI não executa build/compilação explícita, lint, validação sintática de YAML, nem verificação dos arquivos mínimos exigidos pela Entrega 6.
+4. Pull requests com revisão: parcial.
+   - Os PRs `#38` e `#39` têm checklists de auto-review não marcados, apesar de descrições técnicas razoáveis.
+   - Os PRs `#33` e `#35` foram integrados antes do CI existir, portanto não tiveram checks registrados.
+   - A rastreabilidade por issues é limitada: as issues `#11`, `#12`, `#13` e `#14` foram fechadas com critérios de aceitação ainda desmarcados no corpo da issue.
+5. Aplicação justificada de padrões OO: não atendido.
+   - O código usa uma separação em controller, service e repository, incluindo `BaseRepository`, mas a entrega não documenta a aplicação de pelo menos dois padrões OO nem justifica problema, classes afetadas, benefícios e trade-offs conforme exigido.
+   - Não há ADR nova ou documento de padrões de projeto para a Sprint 2.
+6. Atualização das métricas: não atendido.
+   - `metricas.md` continua apenas com a definição das métricas.
+   - Não há valores observados ao final da Sprint 2, data de coleta, análise do planejado versus executado ou fatores que influenciaram o resultado.
+7. Atualização dos riscos: não atendido.
+   - `riscos.md` não registra acompanhamento específico da Sprint 2.
+   - Não informa quais riscos permaneceram ativos, foram mitigados, se concretizaram, surgiram como novos riscos, nem ações atualizadas para a próxima sprint.
+8. Release do marco: parcial.
+   - A descrição da release é basicamente a lista automática de PRs; não traz, de forma objetiva, padrões OO aplicados, situação do CI, limitações conhecidas e pendências para a próxima sprint.
+9. Registro das contribuições individuais: parcial.
+    - `sprint-2.md` lista contribuições por integrante, mas é muito curto e não associa diretamente issues, commits e PRs.
+    - Contribuições individuais:
+      - Leonardo: implementou o workflow de CI no PR `#36`, realizou reviews/aprovações e aparece em commits de merge/ajustes. A contribuição foi importante para qualidade/processo, mas a entrega de CI ficou incompleta em relação aos requisitos e sua participação funcional direta foi menor nesta sprint.
+      - Letícia: implementou o CRUD de Fornecedores com backend, frontend e testes no PR `#40`, além do relatório da Sprint 2 no `#35`. A contribuição funcional é relevante, mas o PR teve descrição/checklist incompletos e o relatório não cobre métricas, riscos, padrões ou rastreabilidade adequada.
+      - Lucas: implementou o CRUD de Tipos de Material no PR `#33`, adicionou integração frontend/testes e fez correções relevantes em conflitos/testes do CRUD de fornecedores. Foi a contribuição mais consistente e rastreável da sprint, limitada pelos problemas gerais da entrega e pelo atraso.
+      - Vinícius: aparece como responsável por Estado do Item (`#38`) e Conferentes (`#39`), com testes e integração frontend para Estado do Item. A entrega é limitada porque parte dos commits iniciais aparece com autoria genérica `Aluno`, o PR de Conferentes tem pouca autoria rastreável nos commits exibidos, e o relatório atribui a ele um CRUD de Patrimônio que não foi entregue na tag.
+10. Documentação e reprodutibilidade: parcial.
+   - O README raiz ainda não informa comandos claros para execução local, testes, build ou lint; `front/README.md` permanece o README padrão do Next.js.
