@@ -1,0 +1,474 @@
+components:
+  parameters:
+    IdParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+      description: Identificador do registro.
+  responses:
+    NotFound:
+      description: Registro nao encontrado.
+    ValidationError:
+      description: Dados invalidos.
+    Conflict:
+      description: Conflito com regra de negocio ou unicidade.
+    NoContent:
+      description: Operacao concluida sem corpo de resposta.
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    GenericRecord:
+      type: object
+      additionalProperties: true
+
+/api/ambientes:
+  get:
+    tags: [Ambientes]
+    summary: Lista ambientes ativos.
+    responses:
+      200:
+        description: Lista de ambientes.
+  post:
+    tags: [Ambientes]
+    summary: Cria ambiente.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GenericRecord"
+    responses:
+      201:
+        description: Ambiente criado.
+      400:
+        $ref: "#/components/responses/ValidationError"
+      409:
+        $ref: "#/components/responses/Conflict"
+/api/ambientes/deletados:
+  get:
+    tags: [Ambientes]
+    summary: Lista ambientes deletados.
+    responses:
+      200:
+        description: Lista de ambientes deletados.
+/api/ambientes/{id}:
+  get:
+    tags: [Ambientes]
+    summary: Busca ambiente por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Ambiente encontrado.
+      404:
+        $ref: "#/components/responses/NotFound"
+  put:
+    tags: [Ambientes]
+    summary: Atualiza ambiente.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GenericRecord"
+    responses:
+      200:
+        description: Ambiente atualizado.
+      400:
+        $ref: "#/components/responses/ValidationError"
+      404:
+        $ref: "#/components/responses/NotFound"
+  delete:
+    tags: [Ambientes]
+    summary: Remove ambiente.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+      404:
+        $ref: "#/components/responses/NotFound"
+      409:
+        $ref: "#/components/responses/Conflict"
+/api/ambientes/{id}/restaurar:
+  patch:
+    tags: [Ambientes]
+    summary: Restaura ambiente deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Ambiente restaurado.
+      404:
+        $ref: "#/components/responses/NotFound"
+
+/api/conferentes:
+  get:
+    tags: [Conferentes]
+    summary: Lista conferentes ativos.
+    responses:
+      200:
+        description: Lista de conferentes.
+  post:
+    tags: [Conferentes]
+    summary: Cria conferente.
+    responses:
+      201:
+        description: Conferente criado.
+/api/conferentes/{id}:
+  get:
+    tags: [Conferentes]
+    summary: Busca conferente por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Conferente encontrado.
+      404:
+        $ref: "#/components/responses/NotFound"
+  put:
+    tags: [Conferentes]
+    summary: Atualiza conferente.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Conferente atualizado.
+  delete:
+    tags: [Conferentes]
+    summary: Remove conferente.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/conferentes/deletados:
+  get:
+    tags: [Conferentes]
+    summary: Lista conferentes deletados.
+    responses:
+      200:
+        description: Lista de conferentes deletados.
+/api/conferentes/{id}/restaurar:
+  patch:
+    tags: [Conferentes]
+    summary: Restaura conferente deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Conferente restaurado.
+
+/api/estados-item:
+  get:
+    tags: [Estados de item]
+    summary: Lista estados de item ativos.
+    responses:
+      200:
+        description: Lista de estados.
+  post:
+    tags: [Estados de item]
+    summary: Cria estado de item.
+    responses:
+      201:
+        description: Estado criado.
+/api/estados-item/{id}:
+  get:
+    tags: [Estados de item]
+    summary: Busca estado de item por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Estado encontrado.
+  put:
+    tags: [Estados de item]
+    summary: Atualiza estado de item.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Estado atualizado.
+  delete:
+    tags: [Estados de item]
+    summary: Remove estado de item.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/estados-item/deletados:
+  get:
+    tags: [Estados de item]
+    summary: Lista estados de item deletados.
+    responses:
+      200:
+        description: Lista de estados deletados.
+/api/estados-item/{id}/restaurar:
+  patch:
+    tags: [Estados de item]
+    summary: Restaura estado de item deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Estado restaurado.
+
+/api/fornecedores:
+  get:
+    tags: [Fornecedores]
+    summary: Lista fornecedores ativos.
+    responses:
+      200:
+        description: Lista de fornecedores.
+  post:
+    tags: [Fornecedores]
+    summary: Cria fornecedor.
+    responses:
+      201:
+        description: Fornecedor criado.
+/api/fornecedores/{id}:
+  get:
+    tags: [Fornecedores]
+    summary: Busca fornecedor por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Fornecedor encontrado.
+  put:
+    tags: [Fornecedores]
+    summary: Atualiza fornecedor.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Fornecedor atualizado.
+  delete:
+    tags: [Fornecedores]
+    summary: Remove fornecedor.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/fornecedores/deletados:
+  get:
+    tags: [Fornecedores]
+    summary: Lista fornecedores deletados.
+    responses:
+      200:
+        description: Lista de fornecedores deletados.
+/api/fornecedores/{id}/restaurar:
+  patch:
+    tags: [Fornecedores]
+    summary: Restaura fornecedor deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Fornecedor restaurado.
+
+/api/patrimonios:
+  get:
+    tags: [Patrimonios]
+    summary: Lista patrimonios ativos.
+    responses:
+      200:
+        description: Lista de patrimonios.
+  post:
+    tags: [Patrimonios]
+    summary: Cria patrimonio.
+    responses:
+      201:
+        description: Patrimonio criado.
+      400:
+        $ref: "#/components/responses/ValidationError"
+      409:
+        $ref: "#/components/responses/Conflict"
+/api/patrimonios/{id}:
+  get:
+    tags: [Patrimonios]
+    summary: Busca patrimonio por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Patrimonio encontrado.
+      404:
+        $ref: "#/components/responses/NotFound"
+  put:
+    tags: [Patrimonios]
+    summary: Atualiza patrimonio.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Patrimonio atualizado.
+  delete:
+    tags: [Patrimonios]
+    summary: Remove patrimonio.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/patrimonios/deletados:
+  get:
+    tags: [Patrimonios]
+    summary: Lista patrimonios deletados.
+    responses:
+      200:
+        description: Lista de patrimonios deletados.
+/api/patrimonios/{id}/restaurar:
+  patch:
+    tags: [Patrimonios]
+    summary: Restaura patrimonio deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Patrimonio restaurado.
+
+/api/responsaveis:
+  get:
+    tags: [Responsaveis]
+    summary: Lista responsaveis ativos.
+    responses:
+      200:
+        description: Lista de responsaveis.
+  post:
+    tags: [Responsaveis]
+    summary: Cria responsavel.
+    responses:
+      201:
+        description: Responsavel criado.
+/api/responsaveis/{id}:
+  get:
+    tags: [Responsaveis]
+    summary: Busca responsavel por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Responsavel encontrado.
+  put:
+    tags: [Responsaveis]
+    summary: Atualiza responsavel.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Responsavel atualizado.
+  delete:
+    tags: [Responsaveis]
+    summary: Remove responsavel.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/responsaveis/deletados:
+  get:
+    tags: [Responsaveis]
+    summary: Lista responsaveis deletados.
+    responses:
+      200:
+        description: Lista de responsaveis deletados.
+/api/responsaveis/{id}/restaurar:
+  patch:
+    tags: [Responsaveis]
+    summary: Restaura responsavel deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Responsavel restaurado.
+
+/api/tipo-material:
+  get:
+    tags: [Tipos de material]
+    summary: Lista tipos de material ativos.
+    responses:
+      200:
+        description: Lista de tipos de material.
+  post:
+    tags: [Tipos de material]
+    summary: Cria tipo de material.
+    responses:
+      201:
+        description: Tipo de material criado.
+/api/tipo-material/{id}:
+  get:
+    tags: [Tipos de material]
+    summary: Busca tipo de material por ID.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Tipo de material encontrado.
+  put:
+    tags: [Tipos de material]
+    summary: Atualiza tipo de material.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Tipo de material atualizado.
+  delete:
+    tags: [Tipos de material]
+    summary: Remove tipo de material.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      204:
+        $ref: "#/components/responses/NoContent"
+/api/tipo-material/deletados:
+  get:
+    tags: [Tipos de material]
+    summary: Lista tipos de material deletados.
+    responses:
+      200:
+        description: Lista de tipos de material deletados.
+/api/tipo-material/{id}/restaurar:
+  patch:
+    tags: [Tipos de material]
+    summary: Restaura tipo de material deletado.
+    parameters:
+      - $ref: "#/components/parameters/IdParam"
+    responses:
+      200:
+        description: Tipo de material restaurado.
+
+/api/audit-log:
+  get:
+    tags: [Audit log]
+    summary: Lista logs de auditoria.
+    responses:
+      200:
+        description: Lista de logs.
+/api/audit-log/{tabela}/{registroId}:
+  get:
+    tags: [Audit log]
+    summary: Lista logs por tabela e registro.
+    parameters:
+      - in: path
+        name: tabela
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: registroId
+        required: true
+        schema:
+          type: integer
+    responses:
+      200:
+        description: Lista de logs filtrada.
