@@ -8,6 +8,7 @@ import { EstadoItem } from "../src/models/EstadoItem";
 import { Fornecedor } from "../src/models/Fornecedor";
 import { Patrimonio } from "../src/models/Patrimonio";
 import { Responsavel } from "../src/models/Responsavel";
+import { Solicitacao } from "../src/models/Solicitacao";
 import { TipoMaterial } from "../src/models/TipoMaterial";
 import "../src/database/index";
 
@@ -83,6 +84,10 @@ describe("Schema: Patrimonio", () => {
   it("tabela e colunas existem com nullability correta", () => validateSchema(Patrimonio));
 });
 
+describe("Schema: Solicitacao", () => {
+  it("tabela e colunas existem com nullability correta", () => validateSchema(Solicitacao));
+});
+
 describe("Associations", () => {
   it("Patrimonio pertence a Ambiente", () => {
     expect(Patrimonio.associations).toHaveProperty("Ambiente");
@@ -101,5 +106,11 @@ describe("Associations", () => {
   });
   it("Ambiente pertence a Responsavel", () => {
     expect(Ambiente.associations).toHaveProperty("Responsavel");
+  });
+  it("Solicitacao pertence a Patrimonio", () => {
+    expect(Solicitacao.associations).toHaveProperty("Patrimonio");
+  });
+  it("Solicitacao pertence a Conferente", () => {
+    expect(Solicitacao.associations).toHaveProperty("Conferente");
   });
 });
