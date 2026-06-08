@@ -87,6 +87,19 @@ CREATE TABLE patrimonio (
     deleted_at TIMESTAMP NULL
 );
 
+CREATE TABLE solicitacao (
+    id SERIAL PRIMARY KEY,
+    patrimonio_id INT NOT NULL REFERENCES patrimonio(id),
+    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('manutencao', 'substituicao')),
+    status VARCHAR(20) NOT NULL DEFAULT 'aberta' CHECK (status IN ('aberta', 'em_andamento', 'concluida', 'cancelada')),
+    descricao TEXT,
+    conferente_id INT REFERENCES conferente(id),
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
+);
+
 CREATE TABLE audit_log (
     id SERIAL PRIMARY KEY,
     tabela VARCHAR(100) NOT NULL,

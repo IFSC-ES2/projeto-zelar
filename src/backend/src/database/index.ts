@@ -5,6 +5,8 @@ import { Patrimonio } from "../models/Patrimonio";
 import { Responsavel } from "../models/Responsavel";
 import { TipoMaterial } from "../models/TipoMaterial";
 import { AuditLog } from "../models/AuditLog";
+import { Conferente } from "../models/Conferente";
+import { Solicitacao } from "../models/Solicitacao";
 
 Ambiente.belongsTo(Responsavel, { foreignKey: "responsavel_id" });
 Responsavel.hasMany(Ambiente, { foreignKey: "responsavel_id" });
@@ -20,5 +22,10 @@ EstadoItem.hasMany(Patrimonio, { foreignKey: "estado_item_id" });
 Ambiente.hasMany(Patrimonio, { foreignKey: "ambiente_id" });
 Responsavel.hasMany(Patrimonio, { foreignKey: "responsavel_id" });
 Fornecedor.hasMany(Patrimonio, { foreignKey: "fornecedor_id" });
+
+Solicitacao.belongsTo(Patrimonio, { foreignKey: "patrimonio_id" });
+Solicitacao.belongsTo(Conferente, { foreignKey: "conferente_id" });
+Patrimonio.hasMany(Solicitacao, { foreignKey: "patrimonio_id" });
+Conferente.hasMany(Solicitacao, { foreignKey: "conferente_id" });
 
 export { sequelize } from "./connection";
