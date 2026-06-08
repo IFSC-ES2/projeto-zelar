@@ -16,6 +16,15 @@ export const PatrimonioController = {
     res.json(item);
   },
 
+  async historicoEstado(req: Request, res: Response, next: NextFunction) {
+    try {
+      const items = await service.findHistoricoEstado(Number(req.params.id));
+      res.json(items);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async create(req: Request, res: Response, next: NextFunction) {
     const {
       numero_patrimonio,
