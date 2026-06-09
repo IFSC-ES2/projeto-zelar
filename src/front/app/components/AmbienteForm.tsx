@@ -52,6 +52,11 @@ export default function AmbienteForm() {
       return;
     }
 
+    if (!responsavelId) {
+      setErro("Responsável é obrigatório");
+      return;
+    }
+
     setLoading(true);
     const body = {
       nome: nome.trim(),
@@ -148,12 +153,13 @@ export default function AmbienteForm() {
             </h2>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Responsável pelo Ambiente
+                Responsável pelo Ambiente *
               </label>
               <select
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 value={responsavelId}
                 onChange={(e) => setResponsavelId(e.target.value)}
+                required
               >
                 <option value="">Selecione...</option>
                 {responsaveis.map((r) => (

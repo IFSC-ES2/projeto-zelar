@@ -15,10 +15,16 @@ export class AmbienteService {
   }
 
   create(data: CreationAttributes<Ambiente>) {
+    if (!data.responsavel_id) {
+      throw new Error('responsavel_id é obrigatório');
+    }
     return this.repo.create(data);
   }
 
   update(id: number, data: Partial<CreationAttributes<Ambiente>>) {
+    if (data.responsavel_id === null || data.responsavel_id === undefined) {
+      throw new Error('responsavel_id é obrigatório');
+    }
     return this.repo.update(id, data);
   }
 
