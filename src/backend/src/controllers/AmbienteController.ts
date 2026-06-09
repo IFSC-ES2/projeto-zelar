@@ -17,10 +17,14 @@ export const AmbienteController = {
   },
 
   async create(req: Request, res: Response, next: NextFunction) {
-    const { nome } = req.body;
+    const { nome, responsavel_id } = req.body;
 
     if (!nome || nome.trim() === '') {
       return res.status(400).json({ error: 'nome é obrigatório' });
+    }
+
+    if (!responsavel_id) {
+      return res.status(400).json({ error: 'responsavel_id é obrigatório' });
     }
 
     try {
