@@ -12,7 +12,7 @@ beforeEach(() => {
 
 describe('GET /api/ambientes', () => {
   it('200 com lista de ambientes', async () => {
-    const list = [{ id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: null }];
+    const list = [{ id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: 1 }];
     (MockedService.prototype.findAll as jest.Mock).mockResolvedValue(list);
 
     const res = await request(app).get('/api/ambientes');
@@ -24,7 +24,7 @@ describe('GET /api/ambientes', () => {
 
 describe('GET /api/ambientes/:id', () => {
   it('200 quando encontrado', async () => {
-    const item = { id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: null };
+    const item = { id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: 1 };
     (MockedService.prototype.findById as jest.Mock).mockResolvedValue(item);
 
     const res = await request(app).get('/api/ambientes/1');
@@ -45,12 +45,12 @@ describe('GET /api/ambientes/:id', () => {
 
 describe('POST /api/ambientes', () => {
   it('201 com body válido', async () => {
-    const created = { id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: null };
+    const created = { id: 1, nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: 1 };
     (MockedService.prototype.create as jest.Mock).mockResolvedValue(created);
 
     const res = await request(app)
       .post('/api/ambientes')
-      .send({ nome: 'Lab 1', bloco: 'A', andar: '1' });
+      .send({ nome: 'Lab 1', bloco: 'A', andar: '1', responsavel_id: 1 });
 
     expect(res.status).toBe(201);
     expect(res.body).toEqual(created);
@@ -74,12 +74,30 @@ describe('POST /api/ambientes', () => {
     expect(res.body).toEqual({ error: 'nome é obrigatório' });
   });
 
+  it('400 sem responsavel_id', async () => {
+    const res = await request(app)
+      .post('/api/ambientes')
+      .send({ nome: 'Lab 1', bloco: 'A' });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ error: 'responsavel_id é obrigatório' });
+  });
+
+  it('400 com responsavel_id nulo', async () => {
+    const res = await request(app)
+      .post('/api/ambientes')
+      .send({ nome: 'Lab 1', responsavel_id: null });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ error: 'responsavel_id é obrigatório' });
+  });
+
   it('500 quando service lança erro', async () => {
     (MockedService.prototype.create as jest.Mock).mockRejectedValue(new Error('DB error'));
 
     const res = await request(app)
       .post('/api/ambientes')
-      .send({ nome: 'Lab 1' });
+      .send({ nome: 'Lab 1', responsavel_id: 1 });
 
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: 'Erro interno do servidor' });
@@ -87,14 +105,14 @@ describe('POST /api/ambientes', () => {
 });
 
 describe('PUT /api/ambientes/:id', () => {
-  const updated = { id: 1, nome: 'Lab Atualizado', bloco: 'B', andar: '2', responsavel_id: null };
+  const updated = { id: 1, nome: 'Lab Atualizado', bloco: 'B', andar: '2', responsavel_id: 1 };
 
   it('200 com dados válidos', async () => {
     (MockedService.prototype.update as jest.Mock).mockResolvedValue(updated);
 
     const res = await request(app)
       .put('/api/ambientes/1')
-      .send({ nome: 'Lab Atualizado' });
+      .send({ nome: 'Lab Atualizado', responsavel_id: 1 });
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual(updated);
@@ -105,10 +123,20 @@ describe('PUT /api/ambientes/:id', () => {
 
     const res = await request(app)
       .put('/api/ambientes/999')
-      .send({ nome: 'Lab' });
+      .send({ nome: 'Lab', responsavel_id: 1 });
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({ error: 'Não encontrado' });
+  });
+
+  it('400 quando responsavel_id é removido (null)', async () => {
+    (MockedService.prototype.update as jest.Mock).mockRejectedValue(new Error('responsavel_id é obrigatório'));
+
+    const res = await request(app)
+      .put('/api/ambientes/1')
+      .send({ nome: 'Lab', responsavel_id: null });
+
+    expect(res.status).toBe(500);
   });
 
   it('500 quando service lança erro', async () => {
@@ -116,7 +144,7 @@ describe('PUT /api/ambientes/:id', () => {
 
     const res = await request(app)
       .put('/api/ambientes/1')
-      .send({ nome: 'Lab' });
+      .send({ nome: 'Lab', responsavel_id: 1 });
 
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: 'Erro interno do servidor' });

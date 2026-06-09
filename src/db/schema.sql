@@ -63,7 +63,7 @@ CREATE TABLE ambiente (
     nome VARCHAR(100) NOT NULL,
     bloco VARCHAR(50),
     andar VARCHAR(20),
-    responsavel_id INT REFERENCES responsavel(id),
+    responsavel_id INT NOT NULL REFERENCES responsavel(id),
     versao INTEGER DEFAULT 1 NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
