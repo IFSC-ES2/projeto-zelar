@@ -12,6 +12,7 @@ import {
   Store,
   Tags,
   AlertCircle,
+  Wrench,
   Menu,
   X,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import {
 const menuItems = [
   { path: "/", icon: Home, label: "Dashboard" },
   { path: "/patrimonios", icon: Package, label: "Patrimônios" },
+  { path: "/solicitacoes", icon: Wrench, label: "Solicitações" },
   { path: "/ambientes", icon: MapPin, label: "Ambientes" },
   { path: "/responsaveis", icon: Users, label: "Responsáveis" },
   { path: "/conferentes", icon: UserCheck, label: "Conferentes" },

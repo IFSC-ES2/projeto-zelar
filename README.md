@@ -7,6 +7,8 @@
 
 - [**Visão do Produto e MVP**](docs/inception.md)
 - [**Definition of Done**](docs/dod.md)
+- [**Diagramas C4 (Arquitetura)**](docs/c4-diagrams.md)
+- [**Arquitetura Detalhada**](docs/arquitetura.md)
 - [**Decisões Arquiteturais (ADRs)**](docs/adrs/)
 - [**Estimativas e Planejamento**](docs/estimativas.md)
 - [**Baseline do Projeto**](docs/baseline.md)
@@ -17,6 +19,156 @@
 - [**Critérios de Qualidade (ISO 25010)**](docs/qualidade.md)
 - [**Exemplo de Pull Request**](https://github.com/IFSC-ES2/projeto-zelar/pull/1)
 - [**Acesso ao nosso Board e Backlog**](https://github.com/orgs/IFSC-ES2/projects/27)
+
+---
+
+## Arquitetura e Componentes do Sistema
+
+O **Zelar** é um sistema WEB monolítico com arquitetura cliente-servidor e separação clara entre frontend (Next.js) e backend (Node.js/Express). Veja detalhamento completo em [`docs/arquitetura.md`](docs/arquitetura.md).
+
+### Visão de Contexto (C4)
+
+```mermaid
+C4Context
+  title Zelar - System Context Diagram
+
+  Person(gestor, "Gestor de Patrimônio", "Responsável pela gestão central de patrimônios")
+  Person(responsavel, "Responsável pelo Ambiente", "Gerencia ambiente e seus patrimônios")
+  Person(conferente, "Conferente", "Realiza conferência física de patrimônios")
+  
+  System(zelar, "Zelar", "Sistema WEB de Gerenciamento de Patrimônio - Permite cadastro, organização e rastreamento de patrimônios associados a ambientes específicos")
+  
+  System_Ext(smtp, "Servidor SMTP", "Envia notificações por e-mail (Futuro)")
+
+  BiRel(gestor, zelar, "Usa")
+  BiRel(responsavel, zelar, "Usa")
+  BiRel(conferente, zelar, "Usa")
+  Rel(zelar, smtp, "Envia notificações", "SMTP")
+```
+
+### Visão de Contêineres (C4)
+
+```mermaid
+C4Container
+  title Zelar - Container Diagram
+
+  Person(usuario, "Usuário", "Gestor, Responsável ou Conferente")
+  
+  Container(frontend, "Frontend Web", "Next.js + React + TypeScript", "Interface web responsiva. Cadastro CRUD, visualização de patrimônios, organização por ambiente.")
+  Container(api, "API REST Backend", "Node.js + Express + TypeScript", "Lógica de negócio, validações, orquestração. Endpoints RESTful para CRUD de patrimônios, ambientes, responsáveis, fornecedores, etc.")
+  ContainerDb(db, "PostgreSQL Database", "PostgreSQL 15+", "Armazena patrimônios, ambientes, responsáveis, conferentes, fornecedores, tipos de material, estado de itens, logs de auditoria.")
+  
+  Rel(usuario, frontend, "Acessa em navegador", "HTTPS")
+  Rel(frontend, api, "Requisições HTTP", "REST JSON")
+  Rel(api, db, "SQL queries", "TCP/5432")
+```
+
+### Componentes Principais
+
+#### Backend (Node.js/Express)
+
+| Camada | Responsabilidade | Exemplos |
+|---|---|---|
+| **Routes** | Define endpoints HTTP | `GET /api/ambientes`, `POST /api/patrimonio` |
+| **Controllers** | Recebe requisição, valida e coordena | `AmbienteController.create()`: valida campos obrigatórios |
+| **Services** | Regras de negócio e orquestração | `AmbienteService.create()`: valida se responsável existe |
+| **Repositories** | Acesso a dados via ORM | `AmbienteRepository.create()`: executa INSERT via Sequelize |
+| **Models** | Schema de dados e validações | `Ambiente`: define colunas, tipos, relacionamentos |
+
+#### Frontend (Next.js/React)
+
+| Componente | Responsabilidade | Exemplos |
+|---|---|---|
+| **Pages** | Rotas e layouts | `/app/ambientes/page.tsx`: lista de ambientes |
+| **Components** | UI reutilizável | `AmbienteForm.tsx`: formulário com validações locais |
+| **API Client** | Comunicação com backend | `fetch()` helper functions em `lib/api.ts` |
+| **Styles** | Design responsivo | TailwindCSS em componentes |
+
+#### Banco de Dados (PostgreSQL)
+
+| Tabela | Propósito |
+|---|---|
+| `patrimonio` | Bem patrimonial (chave: `numero_patrimonio`) |
+| `ambiente` | Local físico com responsável obrigatório |
+| `responsavel` | Pessoa responsável por ambiente/patrimônio |
+| `conferente` | Pessoa que realiza conferência |
+| `fornecedor` | Empresa fornecedora |
+| `tipo_material` | Classificação do bem |
+| `estado_item` | Estado conservação (em uso, manutenção, inservível) |
+| `audit_log` | Rastreamento de alterações |
+
+### Fluxo de Dados - Exemplo: Cadastro de Ambiente
+
+```
+Frontend                       Backend                        Database
+   │                             │                                │
+   ├─ AmbienteForm.tsx          │                                │
+   ├─ Valida nome, responsável  │                                │
+   └─ POST /api/ambientes ──────→ Routes                         │
+                                 ├─→ AmbienteController          │
+                                 │   ├─ Valida campos obrigatórios
+                                 │   └─ Chama AmbienteService    │
+                                 │       ├─ Valida responsável existe
+                                 │       └─ Chama AmbienteRepository
+                                 │           └─ INSERT INTO ambiente ──→ INSERT OK
+                                 │               ← Retorna dados        │
+                                 │       ← Retorna dados               │
+                                 │   ← Retorna JSON (201)             │
+                                 ←─ Retorna JSON ──────────── ←─ Usuário vê confirmação
+```
+
+### Organização de Pastas
+
+```
+projeto-zelar/
+├── docs/
+│   ├── arquitetura.md          ← VOCÊ ESTÁ AQUI
+│   ├── adrs/                   ← Decisões arquiteturais
+│   ├── db/                     ← Modelagem de dados
+│   └── ...
+├── src/
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── controllers/    ← Recebe requisições
+│   │   │   ├── services/       ← Lógica de negócio
+│   │   │   ├── repositories/   ← Acesso a dados
+│   │   │   ├── models/         ← Schema Sequelize
+│   │   │   ├── routes/         ← Endpoints HTTP
+│   │   │   ├── database/       ← Conexão e migração
+│   │   │   └── app.ts          ← App Express
+│   │   └── tests/              ← Testes Jest
+│   ├── front/
+│   │   ├── app/
+│   │   │   ├── ambientes/      ← Módulo de ambientes
+│   │   │   ├── patrimonios/    ← Módulo de patrimônios
+│   │   │   ├── components/     ← Componentes reutilizáveis
+│   │   │   ├── lib/            ← Utilitários
+│   │   │   └── layout.tsx
+│   │   └── public/
+│   ├── db/
+│   │   ├── schema.sql          ← Definição de tabelas
+│   │   └── seed.sql            ← Dados iniciais
+│   └── docker-compose.yml
+└── package.json
+```
+
+### Decisões de Arquitetura
+
+Veja documentos detalhados:
+- [**ADR-0001: Stack Principal**](docs/adrs/ADR-0001-stack-principal.md) - Por que Node.js, Next.js e PostgreSQL?
+- [**ADR-0002: Arquitetura Padrão**](docs/adrs/ADR-0002-arquitetura-padrao.md) - Por que MVC no backend?
+
+### Próximos Passos de Arquitetura
+
+- **Autenticação**: JWT ou Session-based
+- **Autorização**: RBAC (Gestor, Responsável, Conferente)
+- **Notificações**: SMTP para e-mails automáticos
+- **Auditoria**: População completa de `audit_log`
+- **Relatórios**: Exportação em CSV/PDF
+
+Para mais detalhes, acesse **[`docs/arquitetura.md`](docs/arquitetura.md)**.
+
+---
 
 ## 1. Tema Definido
 
@@ -63,7 +215,7 @@ O MVP entregará o fluxo completo de cadastro e alocação de patrimônios, alé
 
 ---
 
-## 🐳 Como rodar com Docker
+## Como rodar com Docker
 
 Com Docker você não precisa instalar Node nem PostgreSQL — ele cuida de tudo.
 

@@ -9,7 +9,7 @@ export class Ambiente extends Model<
   declare nome: string;
   declare bloco: string | null;
   declare andar: string | null;
-  declare responsavel_id: number | null;
+  declare responsavel_id: number;
   declare versao: CreationOptional<number>;
 }
 
@@ -19,7 +19,7 @@ Ambiente.init(
     nome: { type: DataTypes.STRING(100), allowNull: false },
     bloco: { type: DataTypes.STRING(50), allowNull: true },
     andar: { type: DataTypes.STRING(20), allowNull: true },
-    responsavel_id: { type: DataTypes.INTEGER, allowNull: true },
+    responsavel_id: { type: DataTypes.INTEGER, allowNull: false },
     versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
   },
   {
