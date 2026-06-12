@@ -15,10 +15,12 @@
 - [**Métricas**](docs/metricas.md)
 - [**Riscos e Plano de Resposta**](docs/riscos.md)
 - [**Fluxo de Trabalho Colaborativo**](docs/fluxo-de-trabalho.md)
-- [**Como rodar com Docker (passo a passo)**](#-como-rodar-o-projeto-com-docker-passo-a-passo)
+- [**Como rodar o projeto**](docs/instalacao.md)
 - [**Critérios de Qualidade (ISO 25010)**](docs/qualidade.md)
 - [**Exemplo de Pull Request**](https://github.com/IFSC-ES2/projeto-zelar/pull/1)
 - [**Acesso ao nosso Board e Backlog**](https://github.com/orgs/IFSC-ES2/projects/27)
+- [**Entrega Final**](docs/entrega-final.md)
+
 
 ---
 
