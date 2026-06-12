@@ -63,7 +63,7 @@ CREATE TABLE ambiente (
     nome VARCHAR(100) NOT NULL,
     bloco VARCHAR(50),
     andar VARCHAR(20),
-    responsavel_id INT REFERENCES responsavel(id),
+    responsavel_id INT NOT NULL REFERENCES responsavel(id),
     versao INTEGER DEFAULT 1 NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -81,6 +81,19 @@ CREATE TABLE patrimonio (
     ambiente_id INT NOT NULL REFERENCES ambiente(id),
     responsavel_id INT NOT NULL REFERENCES responsavel(id),
     fornecedor_id INT REFERENCES fornecedor(id),
+    versao INTEGER DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
+);
+
+CREATE TABLE solicitacao (
+    id SERIAL PRIMARY KEY,
+    patrimonio_id INT NOT NULL REFERENCES patrimonio(id),
+    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('manutencao', 'substituicao')),
+    status VARCHAR(20) NOT NULL DEFAULT 'aberta' CHECK (status IN ('aberta', 'em_andamento', 'concluida', 'cancelada')),
+    descricao TEXT,
+    conferente_id INT REFERENCES conferente(id),
     versao INTEGER DEFAULT 1 NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),

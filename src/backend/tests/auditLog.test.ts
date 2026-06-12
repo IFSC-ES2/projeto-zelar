@@ -3,6 +3,10 @@ import app from "../src/app";
 import { sequelize } from "../src/database/connection";
 import { TipoMaterial } from "../src/models/TipoMaterial";
 import { AuditLog } from "../src/models/AuditLog";
+import { Ambiente } from "../src/models/Ambiente";
+import { EstadoItem } from "../src/models/EstadoItem";
+import { Patrimonio } from "../src/models/Patrimonio";
+import { Responsavel } from "../src/models/Responsavel";
 
 describe("Testes de integração do log de auditoria", () => {
   beforeAll(async () => {
@@ -15,6 +19,10 @@ describe("Testes de integração do log de auditoria", () => {
 
   beforeEach(async () => {
     await AuditLog.destroy({ where: {}, truncate: true, cascade: true });
+    await Patrimonio.destroy({ where: {}, force: true });
+    await Ambiente.destroy({ where: {}, force: true });
+    await Responsavel.destroy({ where: {}, force: true });
+    await EstadoItem.destroy({ where: {}, force: true });
     await TipoMaterial.destroy({ where: {}, force: true });
   });
 
@@ -109,5 +117,55 @@ describe("Testes de integração do log de auditoria", () => {
     expect(res.body.length).toBe(2);
     expect(res.body[0].acao).toBe("UPDATE");
     expect(res.body[1].acao).toBe("CREATE");
+  });
+
+  it("deve retornar historico de mudancas de estado do patrimonio", async () => {
+    const tipo = await TipoMaterial.create({ nome: "Notebook" });
+    const estadoAtivo = await EstadoItem.create({ nome: "Ativo" });
+    const estadoAvariado = await EstadoItem.create({ nome: "Avariado" });
+    const estadoManutencao = await EstadoItem.create({ nome: "Manutencao" });
+    const responsavel = await Responsavel.create({
+      nome: "Responsavel",
+      email: "responsavel@example.com",
+    });
+    const ambiente = await Ambiente.create({
+      nome: "Lab 1",
+      responsavel_id: responsavel.id,
+    });
+    const patrimonio = await Patrimonio.create({
+      numero_patrimonio: "PAT-HIST-001",
+      descricao: "Notebook Dell Latitude",
+      valor: 3500,
+      tipo_material_id: tipo.id,
+      estado_item_id: estadoAtivo.id,
+      ambiente_id: ambiente.id,
+      responsavel_id: responsavel.id,
+    });
+    await AuditLog.destroy({ where: {}, truncate: true, cascade: true });
+
+    await request(app)
+      .put(`/api/patrimonios/${patrimonio.id}`)
+      .send({ estado_item_id: estadoAvariado.id });
+    await request(app)
+      .put(`/api/patrimonios/${patrimonio.id}`)
+      .send({ estado_item_id: estadoManutencao.id });
+
+    const res = await request(app).get(
+      `/api/patrimonios/${patrimonio.id}/historico-estado`,
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([
+      {
+        estado_anterior_id: estadoAtivo.id,
+        estado_novo_id: estadoAvariado.id,
+        data: expect.any(String),
+      },
+      {
+        estado_anterior_id: estadoAvariado.id,
+        estado_novo_id: estadoManutencao.id,
+        data: expect.any(String),
+      },
+    ]);
   });
 });
