@@ -18,7 +18,10 @@
 | 7       | Letícia Helena do R. Furlan  | c693977 | 29/05/26 | 03/06/26 | 5,8  | 10   |
 | 7       | Lucas Barbieri Catarina      | c693977 | 29/05/26 | 03/06/26 | 6,1  | 10   |
 | 7       | Vinicíus Martins de M. Lopes | c693977 | 29/05/26 | 03/06/26 | 4,5  | 10   |
-| 8       |                              |         |          |          |      | 10   |
+| 8       | Leonardo D. de Martini       | 13e70c6 | 01/06/26 | 11/06/26 | 3,8  | 10   |
+| 8       | Letícia Helena do R. Furlan  | 13e70c6 | 01/06/26 | 11/06/26 | 3,6  | 10   |
+| 8       | Lucas Barbieri Catarina      | 13e70c6 | 01/06/26 | 11/06/26 | 2,8  | 10   |
+| 8       | Vinicíus Martins de M. Lopes | 13e70c6 | 01/06/26 | 11/06/26 | 2,5  | 10   |
 | 9       |                              |         |          |          |      | 10   |
 | 10      |                              |         |          |          |      | 10   |
 | 11/12   |                              |         |          |          |      | 30   |
@@ -27,10 +30,10 @@
 
 | aluno                        | nota parcial |
 | ---------------------------- | ------------ |
-| Leonardo D. de Martini       | 7,5          |
-| Letícia Helena do R. Furlan  | 6,9          |
-| Lucas Barbieri Catarina      | 7,4          |
-| Vinicíus Martins de M. Lopes | 5,9          |
+| Leonardo D. de Martini       | 6,8          |
+| Letícia Helena do R. Furlan  | 6,3          |
+| Lucas Barbieri Catarina      | 6,5          |
+| Vinicíus Martins de M. Lopes | 5,3          |
 
 ## Comentários
 
@@ -198,7 +201,45 @@
 8. Registro de contribuição individual: parcial.
    - `entregas/sprint-3.md` lista contribuições individuais, mas é muito curto e não associa explicitamente cada contribuição a issues, commits, PRs e revisões.
    - As contribuições foram inferidas pelo histórico de commits e PR.
-   - Leonardo: contribuição em deploy, soft delete, ajustes de ambiente/CI e CRUD de Patrimônio, além de documentação da sprint. Nota limitada pelas lacunas gerais de arquitetura, métricas, ADRs e release.
-   - Lucas: contribuiu de forma relevante na auditoria (`audit_log`) e na API de auditoria, com PR `#54` bem descrito e testes. A nota é limitaa pelo menor volume integrado na sprint.
-   - Letícia: aparece no relatório como responsável pelo controle de versão e tem commits relacionados a versionamento/soft delete e documentação, mas o PR `#48` teve descrição/checklist incompletos e check inicial de backend falhando. A contribuição é relevante, mas com menor qualidade de evidência.
-   - Vinícius: aparece no relatório como responsável pelos timestamps, mas no intervalo `v0.2.0..c6939774` não há commits rastreáveis com autoria dele. A nota é menor porque a contribuição documentada não foi confirmada pelos commits/PRs do marco.
+    - Leonardo: contribuição em deploy, soft delete, ajustes de ambiente/CI e CRUD de Patrimônio, além de documentação da sprint. Nota limitada pelas lacunas gerais de arquitetura, métricas, ADRs e release.
+    - Lucas: contribuiu de forma relevante na auditoria (`audit_log`) e na API de auditoria, com PR `#54` bem descrito e testes. A nota é limitaa pelo menor volume integrado na sprint.
+    - Letícia: aparece no relatório como responsável pelo controle de versão e tem commits relacionados a versionamento/soft delete e documentação, mas o PR `#48` teve descrição/checklist incompletos e check inicial de backend falhando. A contribuição é relevante, mas com menor qualidade de evidência.
+    - Vinícius: aparece no relatório como responsável pelos timestamps, mas no intervalo `v0.2.0..c6939774` não há commits rastreáveis com autoria dele. A nota é menor porque a contribuição documentada não foi confirmada pelos commits/PRs do marco.
+
+### Entrega 8
+
+1. Ambiente de staging ou equivalente acessível: parcial.
+   - O README informa deploy em `https://zelium.onrender.com/`.
+   - Não foi encontrada URL de backend/API documentada; `/health` e `/api/health` no mesmo domínio retornaram 404. Assim, há evidência de frontend em staging, mas não de fluxo funcional completo com backend em produção.
+2. Manutenção e atualização da integração contínua: parcial.
+   - `.github/workflows/test.yml` continua executando testes de backend e frontend em PRs e push para `main`.
+   - O pipeline ainda não executa build/compilação, lint, validação de YAML nem verificação dos documentos obrigatórios.
+   - Localmente, o frontend passou em `pnpm test` com 64 testes, `pnpm lint` e `pnpm build`.
+   - Backend: sem Postgres local, `npm test` falhou em 22 testes por `ECONNREFUSED 127.0.0.1:5432`. Com Postgres Docker nas credenciais do CI, 125 de 126 testes passaram; restou uma falha em `tests/versioning.test.ts` no caso de conflito de concorrência ao criar `TipoMaterial`.
+3. Documentação de deploy: parcial.
+   - O README foi atualizado com link do Render e tutorial básico de Docker (`cd src`, `docker compose up`, portas 3000/8000/5432).
+   - Não há `DEPLOY.md`, relatório de validação, variáveis de ambiente, comandos de teste/build, instruções de troubleshooting, nem smoke test de API documentado.
+4. Atualização das métricas do projeto: não atendido.
+   - `metricas.md` permanece somente com definição das métricas, sem valores observados, data de coleta, Sprint 4, comparação com sprints anteriores ou análise de decisão.
+   - `riscos.md` não registra acompanhamento da Sprint 4, riscos materializados, novos riscos, riscos encerrados ou revisão de probabilidade/impacto.
+5. Manutenção/reengenharia: não atendido.
+   - Permanecem apenas `ADR-0001-stack-principal.md` e `ADR-0002-arquitetura-padrao.md`, ambos anteriores.
+   - Não há ADR ou justificativa técnica para deploy, health check, reengenharia, arquitetura de produção ou decisões da Sprint 4.
+   - Não há `entregas/sprint-4.md` nem documento equivalente indicando escopo planejado, escopo concluído, itens replanejados ou critérios de aceitação da Sprint 4.
+   - Após o commit avaliado da Sprint 3 (`c6939774`), a equipe integrou apenas correção de health em `render.yaml` e atualização de README com deploy/tutorial Docker.
+   - Não há evidência de nova funcionalidade de produto, manutenção substancial ou reengenharia entregue como incremento da Sprint 4.
+6. Comparação de métrica antes/depois: não atendido.
+   - Não foi encontrada comparação objetiva antes/depois de manutenção ou reengenharia.
+   - Como não há reengenharia documentada, também não há métrica associada a melhoria de manutenibilidade, qualidade, cobertura, desempenho ou acoplamento.
+7. Release/tag do marco: não atendido.
+   - Não existe tag `v0.4.0` nem qualquer tag `v0.4.x`; as únicas tags locais são `v0.1.0` e `v0.2.0`.
+   - Não há release da Sprint 4; no GitHub, a última release listada continua sendo `v0.2.0`.
+   - O `HEAD` local (`7dbb8406`) é um commit de avaliação em `AVALIACAO.md`, não uma entrega da equipe. A avaliação considerou o último commit de entrega da equipe, `13e70c6`, mas isso não substitui a tag/release obrigatória.
+8. Registro de contribuição individual: não atendido.
+   - Não há relatório de contribuições individuais da Sprint 4.
+   - O histórico pós-Sprint 3 mostra apenas contribuições de Leonardo e Letícia em README/deploy/health; não há commits rastreáveis de Lucas ou Vinícius no período considerado.
+Notas individuais:
+    - Leonardo: há contribuição rastreável em README/deploy e ajuste de health, mas sem tag/release, relatório de Sprint 4, métricas, ADRs ou incremento funcional. Recebe nota um pouco maior pela participação técnica rastreável.
+    - Letícia: há contribuição rastreável nos merges de README/deploy e health, mas a entrega formal da Sprint 4 não foi realizada. Nota próxima à de Leonardo pela participação rastreável, com menor evidência técnica direta.
+    - Lucas: não há contribuição rastreável após a Sprint 3 no intervalo avaliado. A nota reflete principalmente a ausência de entrega individual da Sprint 4, apesar de trabalhos anteriores permanecerem no produto.
+    - Vinícius: não há contribuição rastreável após a Sprint 3 no intervalo avaliado e a entrega formal da Sprint 4 não foi feita. Recebe a menor nota individual.
