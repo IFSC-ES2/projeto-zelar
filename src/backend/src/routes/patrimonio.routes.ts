@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PatrimonioController } from "../controllers/PatrimonioController";
+import patrimonioFotoRoutes from "./patrimonioFoto.routes";
 
 const router = Router();
 
@@ -11,5 +12,7 @@ router.get("/:id", PatrimonioController.findById);
 router.post("/", PatrimonioController.create);
 router.put("/:id", PatrimonioController.update);
 router.delete("/:id", PatrimonioController.delete);
+
+router.use("/:patrimonioId/fotos", patrimonioFotoRoutes);
 
 export default router;

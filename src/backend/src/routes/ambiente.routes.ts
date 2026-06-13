@@ -6,6 +6,8 @@ const router = Router();
 router.get("/", AmbienteController.findAll);
 router.get("/deletados", AmbienteController.listDeletados);
 router.patch("/:id/restaurar", AmbienteController.restaurar);
+router.patch("/:id/localizacao", AmbienteController.updateLocalizacao);
+router.delete("/:id/localizacao", AmbienteController.clearLocalizacao);
 router.get("/:id", AmbienteController.findById);
 router.post("/", AmbienteController.create);
 router.put("/:id", AmbienteController.update);

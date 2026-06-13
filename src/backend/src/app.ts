@@ -1,3 +1,4 @@
+import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import routes from "./routes";
 
@@ -12,6 +13,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

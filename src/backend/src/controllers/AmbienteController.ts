@@ -54,6 +54,63 @@ export const AmbienteController = {
     }
   },
 
+  async updateLocalizacao(req: Request, res: Response, next: NextFunction) {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'id invalido' });
+    }
+
+    const { latitude, longitude, precisao_metros } = req.body;
+
+    if (latitude === undefined || latitude === null || isNaN(Number(latitude))) {
+      return res.status(400).json({ error: 'latitude e obrigatoria e deve ser numerica' });
+    }
+    if (longitude === undefined || longitude === null || isNaN(Number(longitude))) {
+      return res.status(400).json({ error: 'longitude e obrigatoria e deve ser numerica' });
+    }
+    if (Number(latitude) < -90 || Number(latitude) > 90) {
+      return res.status(400).json({ error: 'latitude deve estar entre -90 e 90' });
+    }
+    if (Number(longitude) < -180 || Number(longitude) > 180) {
+      return res.status(400).json({ error: 'longitude deve estar entre -180 e 180' });
+    }
+    if (
+      precisao_metros !== undefined &&
+      precisao_metros !== null &&
+      (isNaN(Number(precisao_metros)) || Number(precisao_metros) < 0)
+    ) {
+      return res.status(400).json({ error: 'precisao_metros deve ser numerica e nao negativa' });
+    }
+
+    try {
+      const item = await service.updateLocalizacao(id, {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+        precisao_metros:
+          precisao_metros === undefined || precisao_metros === null ? null : Number(precisao_metros),
+        localizacao_observacao: req.body.localizacao_observacao ?? null,
+      });
+      if (!item) return res.status(404).json({ error: 'Não encontrado' });
+      res.json(item);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async clearLocalizacao(req: Request, res: Response, next: NextFunction) {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'id invalido' });
+    }
+    try {
+      const item = await service.clearLocalizacao(id);
+      if (!item) return res.status(404).json({ error: 'Não encontrado' });
+      res.json(item);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async listDeletados(_req: Request, res: Response, next: NextFunction) {
     try {
       const items = await service.findDeleted();

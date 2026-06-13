@@ -64,6 +64,11 @@ CREATE TABLE ambiente (
     bloco VARCHAR(50),
     andar VARCHAR(20),
     responsavel_id INT NOT NULL REFERENCES responsavel(id),
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    precisao_metros DOUBLE PRECISION,
+    localizacao_observacao VARCHAR(255),
+    localizacao_atualizada_em TIMESTAMP,
     versao INTEGER DEFAULT 1 NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -86,6 +91,26 @@ CREATE TABLE patrimonio (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP NULL
 );
+
+CREATE TABLE patrimonio_fotos (
+    id SERIAL PRIMARY KEY,
+    patrimonio_id INT NOT NULL REFERENCES patrimonio(id),
+    url VARCHAR(255) NOT NULL,
+    nome_arquivo VARCHAR(255) NOT NULL,
+    nome_original VARCHAR(255),
+    mime_type VARCHAR(50) NOT NULL,
+    tamanho_bytes INT NOT NULL,
+    largura INT,
+    altura INT,
+    descricao TEXT,
+    ordem INT NOT NULL DEFAULT 0,
+    principal BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
+);
+
+CREATE INDEX patrimonio_fotos_patrimonio_id_idx ON patrimonio_fotos (patrimonio_id);
 
 CREATE TABLE solicitacao (
     id SERIAL PRIMARY KEY,

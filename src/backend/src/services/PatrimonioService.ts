@@ -2,17 +2,39 @@ import { CreationAttributes } from 'sequelize';
 import { Op } from 'sequelize';
 import { AuditLog } from '../models/AuditLog';
 import { Patrimonio } from '../models/Patrimonio';
+import { PatrimonioFoto } from '../models/PatrimonioFoto';
 import { PatrimonioRepository } from '../repositories/PatrimonioRepository';
+
+const fotoPrincipalInclude = {
+  model: PatrimonioFoto,
+  as: 'fotos',
+  where: { principal: true },
+  required: false,
+  attributes: ['url'],
+};
+
+function withFotoPrincipal(patrimonio: Patrimonio): Record<string, unknown> {
+  const json = patrimonio.get({ plain: true }) as Record<string, unknown>;
+  const fotos = json.fotos as Array<{ url: string }> | undefined;
+  json.foto_principal_url = fotos && fotos.length > 0 ? fotos[0].url : null;
+  delete json.fotos;
+  return json;
+}
 
 export class PatrimonioService {
   private repo = new PatrimonioRepository();
 
-  findAll() {
-    return this.repo.findAll();
+  async findAll() {
+    const items = await Patrimonio.findAll({
+      include: [fotoPrincipalInclude],
+      order: [['id', 'ASC']],
+    });
+    return items.map(withFotoPrincipal);
   }
 
-  findById(id: number) {
-    return this.repo.findById(id);
+  async findById(id: number) {
+    const item = await Patrimonio.findByPk(id, { include: [fotoPrincipalInclude] });
+    return item ? withFotoPrincipal(item) : null;
   }
 
   create(data: CreationAttributes<Patrimonio>) {

@@ -2,6 +2,7 @@ import { Ambiente } from "../models/Ambiente";
 import { EstadoItem } from "../models/EstadoItem";
 import { Fornecedor } from "../models/Fornecedor";
 import { Patrimonio } from "../models/Patrimonio";
+import { PatrimonioFoto } from "../models/PatrimonioFoto";
 import { Responsavel } from "../models/Responsavel";
 import { TipoMaterial } from "../models/TipoMaterial";
 import { AuditLog } from "../models/AuditLog";
@@ -22,6 +23,9 @@ EstadoItem.hasMany(Patrimonio, { foreignKey: "estado_item_id" });
 Ambiente.hasMany(Patrimonio, { foreignKey: "ambiente_id" });
 Responsavel.hasMany(Patrimonio, { foreignKey: "responsavel_id" });
 Fornecedor.hasMany(Patrimonio, { foreignKey: "fornecedor_id" });
+
+Patrimonio.hasMany(PatrimonioFoto, { foreignKey: "patrimonio_id", as: "fotos" });
+PatrimonioFoto.belongsTo(Patrimonio, { foreignKey: "patrimonio_id", as: "patrimonio" });
 
 Solicitacao.belongsTo(Patrimonio, { foreignKey: "patrimonio_id" });
 Solicitacao.belongsTo(Conferente, { foreignKey: "conferente_id" });
